@@ -1,0 +1,414 @@
+
+Module Design
+1. Core Modules Structure
+1.1 Route Planning Module
+
+      /**
+ * RouteEngine - Core route calculation and optimization
+ */
+class RouteEngine {
+  constructor(dependencies) {
+    this.mapService = dependencies.mapService;
+    this.batteryModel = dependencies.batteryModel;
+    this.stationSelector = dependencies.stationSelector;
+    this.weatherService = dependencies.weatherService;
+    this.trafficService = dependencies.trafficService;
+    this.cache = dependencies.cacheManager;
+  }
+
+  /**
+   * Primary route calculation entry point
+   * @param {RouteRequest} request - Route calculation request
+   * @returns {Promise<RouteResponse>} Optimized route with charging stops
+   */
+  async calculateOptimalRoute(request) {
+    const cacheKey = this.generateCacheKey(request);
+    
+    // Try cache first
+    let cachedRoute = await this.cache.get(cacheKey);
+    if (cachedRoute && this.isRouteValid(cachedRoute, request)) {
+      return this.enrichRouteWithLiveData(cachedRoute);
+    }
+
+    // Calculate new route
+    const route = await this._computeRoute(request);
+    await this.cache.set(cacheKey, route, 900); // 15 min cache
+    
+    return route;
+  }
+
+  /**
+   * Internal route computation logic
+   */
+  async _computeRoute(request) {
+    const { origin, destination, vehicle, preferences } = request;
+
+    // Step 1: Get base route options from mapping service
+    const baseRoutes = await this.mapService.getRouteOptions(origin, destination);
+    
+    // Step 2: Enrich with environmental data
+    const enrichedRoutes = await Promise.all(
+      baseRoutes.map(route => this._enrichRouteWithContext(route, request))
+    );
+
+    // Step 3: Calculate battery consumption for each route
+    const routesWithConsumption = enrichedRoutes.map(route => ({
+      ...route,
+      consumption: this.batteryModel.predictConsumption(vehicle, route)
+    }));
+
+    // Step 4: Determine charging requirements
+    const routesWithCharging = await Promise.all(
+      routesWithConsumption.map(route => 
+        this._planChargingStops(route, vehicle, preferences)
+      )
+    );
+
+    // Step 5: Optimize and rank routes
+    const optimizedRoutes = this._optimizeRoutes(routesWithCharging, preferences);
+
+    return {
+      primaryRoute: optimizedRoutes[0],
+      alternatives: optimizedRoutes.slice(1, 3),
+      metadata: this._generateRouteMetadata(request, optimizedRoutes)
+    };
+  }
+
+  /**
+   * Enrich route with contextual data (weather, traffic, elevation)
+   */
+  async _enrichRouteWithContext(route, request) {
+    const [weatherData, trafficData, elevationData] = await Promise.all([
+      this.weatherService.getRouteWeather(route.path),
+      this.trafficService.getTrafficConditions(route.path),
+      this.mapService.getElevationProfile(route.path)
+    ]);
+
+    return {
+      ...route,
+      context: {
+        weather: weatherData,
+        traffic: trafficData,
+        elevation: elevationData,
+        timestamp: new Date()
+      }
+    };
+  }
+
+  /**
+   * Plan optimal charging stops for a route
+   */
+  async _planChargingStops(route, vehicle, preferences) {
+    const chargingPlanner = new ChargingStopPlanner({
+      route,
+      vehicle,
+      preferences,
+      stationSelector: this.stationSelector,
+      batteryModel: this.batteryModel
+    });
+
+    return await chargingPlanner.planStops();
+  }
+}
+
+1.2 Battery Model Module
+Generated javascript
+      /**
+ * BatteryModel - Advanced battery behavior simulation
+ */
+class BatteryModel {
+  constructor(mlModels) {
+    this.consumptionModel = mlModels.consumption;
+    this.degradationModel = mlModels.degradation;
+    this.chargingModel = mlModels.charging;
+  }
+
+  /**
+   * Predict energy consumption for a route segment
+   * @param {Vehicle} vehicle - Vehicle specifications
+   * @param {RouteSegment} segment - Route segment data
+   * @returns {ConsumptionPrediction} Energy consumption prediction
+   */
+  predictConsumption(vehicle, segment) {
+    const baseConsumption = vehicle.efficiency; // kWh/100km
+    
+    // Environmental factors
+    const factors = this._calculateEnvironmentalFactors(segment);
+    
+    // Driving pattern analysis
+    const drivingPattern = this._analyzeDrivingPattern(segment);
+    
+    // Vehicle-specific adjustments
+    const vehicleAdjustments = this._getVehicleAdjustments(vehicle, segment);
+
+    const totalFactor = factors.temperature * 
+                       factors.elevation * 
+                       factors.speed * 
+                       factors.traffic * 
+                       drivingPattern.efficiency *
+                       vehicleAdjustments.aerodynamics;
+
+    const predictedConsumption = baseConsumption * totalFactor;
+    
+    return {
+      totalConsumption: predictedConsumption * (segment.distance / 100),
+      consumptionRate: predictedConsumption,
+      confidence: this._calculateConfidence(segment, factors),
+      factors: factors,
+      recommendations: this._generateEfficiencyRecommendations(factors)
+    };
+  }
+
+  /**
+   * Calculate environmental impact factors
+   */
+  _calculateEnvironmentalFactors(segment) {
+    const weather = segment.context.weather;
+    const elevation = segment.context.elevation;
+    const traffic = segment.context.traffic;
+
+    return {
+      temperature: this._getTemperatureFactor(weather.temperature),
+      elevation: this._getElevationFactor(elevation.profile),
+      speed: this._getSpeedFactor(segment.averageSpeed),
+      traffic: this._getTrafficFactor(traffic.congestionLevel),
+      wind: this._getWindFactor(weather.wind, segment.bearing),
+      precipitation: this._getPrecipitationFactor(weather.precipitation)
+    };
+  }
+
+  /**
+   * Temperature impact on battery efficiency
+   */
+  _getTemperatureFactor(temperature) {
+    // Optimal temperature range: 15-25°C
+    if (temperature >= 15 && temperature <= 25) {
+      return 1.0;
+    } else if (temperature < 15) {
+      // Cold weather impact (heating + battery chemistry)
+      return Math.max(0.6, 1 - (15 - temperature) * 0.02);
+    } else {
+      // Hot weather impact (cooling)
+      return Math.max(0.8, 1 - (temperature - 25) * 0.015);
+    }
+  }
+
+  /**
+   * Elevation impact calculation
+   */
+  _getElevationFactor(elevationProfile) {
+    const totalClimb = elevationProfile.positiveElevation;
+    const totalDescent = elevationProfile.negativeElevation;
+    const distance = elevationProfile.distance;
+    
+    // Energy for climbing (with regenerative braking recovery)
+    const climbEnergy = totalClimb * 0.1; // kWh per 100m climb
+    const regenEfficiency = 0.7; // 70% energy recovery on descent
+    const regenEnergy = totalDescent * 0.1 * regenEfficiency;
+    
+    const netElevationImpact = (climbEnergy - regenEnergy) / distance * 100;
+    
+    return 1 + (netElevationImpact / 20); // Normalized factor
+  }
+
+  /**
+   * Simulate charging session
+   */
+  simulateChargingSession(vehicle, station, targetSoc, initialSoc) {
+    const chargingCurve = vehicle.chargingCurve;
+    const stationPower = Math.min(station.maxPower, vehicle.maxChargingPower);
+    
+    let currentSoc = initialSoc;
+    let totalTime = 0;
+    let totalEnergy = 0;
+    
+    const sessions = [];
+    
+    while (currentSoc < targetSoc) {
+      const availablePower = this._getChargingPower(currentSoc, chargingCurve, stationPower);
+      const timeIncrement = 1; // 1 minute increments
+      const energyAdded = (availablePower * timeIncrement) / 60; // kWh
+      
+      currentSoc += (energyAdded / vehicle.batteryCapacity) * 100;
+      totalTime += timeIncrement;
+      totalEnergy += energyAdded;
+      
+      sessions.push({
+        time: totalTime,
+        soc: Math.min(currentSoc, targetSoc),
+        power: availablePower,
+        cumulativeEnergy: totalEnergy
+      });
+      
+      if (totalTime > 180) break; // Safety: max 3 hours
+    }
+    
+    return {
+      sessions,
+      totalTime,
+      totalEnergy,
+      cost: this._calculateChargingCost(totalEnergy, totalTime, station),
+      efficiency: totalEnergy / (totalTime / 60) // kWh per hour
+    };
+  }
+}
+    
+
+1.3 Charging Station Selector Module
+Generated javascript
+      /**
+ * StationSelector - Intelligent charging station selection
+ */
+class StationSelector {
+  constructor(dependencies) {
+    this.stationRepository = dependencies.stationRepository;
+    this.liveDataService = dependencies.liveDataService;
+    this.pricingService = dependencies.pricingService;
+    this.mlPredictor = dependencies.mlPredictor;
+  }
+
+  /**
+   * Find optimal charging stations for a route segment
+   * @param {RouteSegment} segment - Route segment requiring charging
+   * @param {Vehicle} vehicle - Vehicle specifications
+   * @param {ChargingPreferences} preferences - User preferences
+   * @returns {Promise<Array<ChargingStation>>} Ranked list of suitable stations
+   */
+  async findOptimalStations(segment, vehicle, preferences) {
+    const searchRadius = this._calculateSearchRadius(segment, preferences);
+    
+    // Step 1: Get candidate stations within search area
+    const candidateStations = await this._getCandidateStations(
+      segment.midpoint, 
+      searchRadius, 
+      vehicle.connectorTypes
+    );
+
+    // Step 2: Enrich stations with live data
+    const enrichedStations = await this._enrichStationsWithLiveData(candidateStations);
+
+    // Step 3: Score and rank stations
+    const scoredStations = await Promise.all(
+      enrichedStations.map(station => this._scoreStation(station, segment, vehicle, preferences))
+    );
+
+    // Step 4: Apply business rules and filters
+    const filteredStations = this._applyBusinessRules(scoredStations, preferences);
+
+    // Step 5: Sort by composite score
+    return filteredStations
+      .sort((a, b) => b.compositeScore - a.compositeScore)
+      .slice(0, preferences.maxStations || 5);
+  }
+
+  /**
+   * Score individual charging station
+   */
+  async _scoreStation(station, segment, vehicle, preferences) {
+    const scores = {
+      accessibility: await this._scoreAccessibility(station, segment),
+      availability: await this._scoreAvailability(station, vehicle),
+      chargingSpeed: this._scoreChargingSpeed(station, vehicle),
+      pricing: await this._scorePricing(station, vehicle, preferences),
+      reliability: this._scoreReliability(station),
+      amenities: this._scoreAmenities(station, preferences),
+      networkCompatibility: this._scoreNetworkCompatibility(station, preferences),
+      waitTime: await this._scorePredictedWaitTime(station, segment.arrivalTime)
+    };
+
+    const weights = this._getScoreWeights(preferences);
+    const compositeScore = this._calculateCompositeScore(scores, weights);
+
+    return {
+      ...station,
+      scores,
+      compositeScore,
+      recommendation: this._generateRecommendation(scores, compositeScore)
+    };
+  }
+
+  /**
+   * Score station accessibility (distance, detour time)
+   */
+  async _scoreAccessibility(station, segment) {
+    const detourDistance = await this._calculateDetour(segment.path, station.location);
+    const detourTime = detourDistance.time;
+    
+    // Score based on detour time (0-100 scale)
+    let accessibilityScore;
+    if (detourTime <= 2) accessibilityScore = 100;
+    else if (detourTime <= 5) accessibilityScore = 90 - (detourTime - 2) * 10;
+    else if (detourTime <= 10) accessibilityScore = 60 - (detourTime - 5) * 8;
+    else if (detourTime <= 15) accessibilityScore = 20 - (detourTime - 10) * 3;
+    else accessibilityScore = 5;
+
+    return {
+      score: Math.max(0, accessibilityScore),
+      detourTime,
+      detourDistance: detourDistance.distance,
+      impact: detourTime > 10 ? 'high' : detourTime > 5 ? 'medium' : 'low'
+    };
+  }
+
+  /**
+   * Score station availability
+   */
+  async _scoreAvailability(station, vehicle) {
+    const compatibleConnectors = station.connectors.filter(
+      connector => vehicle.connectorTypes.includes(connector.type)
+    );
+
+    if (compatibleConnectors.length === 0) {
+      return { score: 0, reason: 'incompatible_connectors' };
+    }
+
+    const liveData = await this.liveDataService.getStationStatus(station.id);
+    const availableConnectors = compatibleConnectors.filter(
+      connector => liveData.connectors[connector.id]?.status === 'available'
+    );
+
+    const availabilityRatio = availableConnectors.length / compatibleConnectors.length;
+    const score = availabilityRatio * 100;
+    
+    return {
+      score,
+      totalConnectors: compatibleConnectors.length,
+      availableConnectors: availableConnectors.length,
+      confidence: liveData.confidence || 0.5,
+      lastUpdated: liveData.lastUpdated
+    };
+  }
+
+  /**
+   * Predict wait time using ML model
+   */
+  async _scorePredictedWaitTime(station, arrivalTime) {
+    try {
+      const prediction = await this.mlPredictor.predictWaitTime({
+        stationId: station.id,
+        arrivalTime,
+        dayOfWeek: arrivalTime.getDay(),
+        hourOfDay: arrivalTime.getHours(),
+        historicalData: await this._getHistoricalUsage(station.id)
+      });
+
+      let score;
+      if (prediction.waitTime <= 0) score = 100;
+      else if (prediction.waitTime <= 5) score = 90;
+      else if (prediction.waitTime <= 15) score = 70;
+      else if (prediction.waitTime <= 30) score = 40;
+      else score = 10;
+
+      return {
+        score,
+        predictedWaitTime: prediction.waitTime,
+        confidence: prediction.confidence,
+        factors: prediction.factors
+      };
+    } catch (error) {
+      return { score: 50, predictedWaitTime: null, confidence: 0 };
+    }
+  }
+}
+    
+

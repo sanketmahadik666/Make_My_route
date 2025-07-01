@@ -1,0 +1,204 @@
+Service Layer Architecture
+4. Core Services Implementation
+4.1 Route Calculation Service
+Generated javascript
+      /**
+ * RouteCalculationService - Orchestrates route calculation workflow
+ */
+class RouteCalculationService {
+  constructor(dependencies) {
+    this.routeEngine = dependencies.routeEngine;
+    this.cacheManager = dependencies.cacheManager;
+    this.validationService = dependencies.validationService;
+    this.contextEnrichmentService = dependencies.contextEnrichmentService;
+    this.optimizationService = dependencies.optimizationService;
+    this.riskAssessmentService = dependencies.riskAssessmentService;
+  }
+
+  /**
+   * Calculate optimal route with comprehensive analysis
+   * @param {RouteRequest} request - Route calculation request
+   * @returns {Promise<RouteCalculationResult>}
+   */
+  async calculateRoute(request) {
+    const startTime = Date.now();
+    
+    try {
+      // Step 1: Validate input
+      await this.validationService.validateRouteRequest(request);
+      
+      // Step 2: Check cache
+      const cacheResult = await this._checkCache(request);
+      if (cacheResult) {
+        return this._enrichCachedResult(cacheResult, request);
+      }
+
+      // Step 3: Enrich request with context
+      const enrichedRequest = await this.contextEnrichmentService.enrichRequest(request);
+
+      // Step 4: Calculate base routes
+      const baseRoutes = await this.routeEngine.calculateBaseRoutes(enrichedRequest);
+
+      // Step 5: Optimize routes
+      const optimizedRoutes = await this.optimizationService.optimizeRoutes(
+        baseRoutes, 
+        enrichedRequest
+      );
+
+      // Step 6: Assess risks
+      const routesWithRisk = await Promise.all(
+        optimizedRoutes.map(route => 
+          this.riskAssessmentService.assessRoute(route, enrichedRequest)
+        )
+      );
+
+      // Step 7: Generate final result
+      const result = this._generateResult(routesWithRisk, enrichedRequest, startTime);
+
+      // Step 8: Cache result
+      await this._cacheResult(request, result);
+
+      return result;
+
+    } catch (error) {
+      throw new RouteCalculationError(`Route calculation failed: ${error.message}`, {
+        request,
+        error,
+        duration: Date.now() - startTime
+      });
+    }
+  }
+
+  /**
+   * Real-time route updates during trip
+   * @param {string} tripId - Active trip identifier
+   * @param {TripContext} context - Current trip context
+   * @returns {Promise<RouteUpdate>}
+   */
+  async updateActiveRoute(tripId, context) {
+    const trip = await this.tripRepository.getActiveTrip(tripId);
+    if (!trip) {
+      throw new TripNotFoundError(`Trip ${tripId} not found or not active`);
+    }
+
+    // Assess if recalculation is needed
+    const recalcNeeded = await this._assessRecalculationNeed(trip, context);
+    
+    if (!recalcNeeded.required) {
+      return {
+        status: 'no_update_needed',
+        reason: recalcNeeded.reason,
+        nextCheck: recalcNeeded.nextCheckTime
+      };
+    }
+
+    // Recalculate from current position
+    const updateRequest = this._buildUpdateRequest(trip, context);
+    const updatedRoute = await this.calculateRoute(updateRequest);
+
+    // Compare with original route
+    const comparison = this._compareRoutes(trip.originalRoute, updatedRoute);
+
+    return {
+      status: 'updated',
+      updatedRoute,
+      changes: comparison.changes,
+      impact: comparison.impact,
+      recommendation: comparison.recommendation
+    };
+  }
+
+  /**
+   * Assess if route recalculation is needed
+   */
+  async _assessRecalculationNeed(trip, context) {
+    const triggers = [];
+
+    // Traffic condition changes
+    if (context.traffic && this._hasSignificantTrafficChange(trip.lastTrafficData, context.traffic)) {
+      triggers.push({ type: 'traffic', severity: 'medium' });
+    }
+
+    // Weather condition changes
+    if (context.weather && this._hasSignificantWeatherChange(trip.lastWeatherData, context.weather)) {
+      triggers.push({ type: 'weather', severity: 'high' });
+    }
+
+    // Charging station status changes
+    const stationUpdates = await this._checkChargingStationUpdates(trip.chargingPlan.stops);
+    if (stationUpdates.hasSignificantChanges) {
+      triggers.push({ type: 'charging_stations', severity: 'high' });
+    }
+
+    // Battery consumption variance
+    if (this._hasBatteryConsumptionVariance(trip)) {
+      triggers.push({ type: 'battery_consumption', severity: 'medium' });
+    }
+
+    // Route deviation
+    if (context.currentLocation && this._hasRouteDeviation(trip.plannedRoute, context.currentLocation)) {
+      triggers.push({ type: 'route_deviation', severity: 'high' });
+    }
+
+    const highSeverityTriggers = triggers.filter(t => t.severity === 'high');
+    const required = highSeverityTriggers.length > 0 || triggers.length >= 2;
+
+    return {
+      required,
+      triggers,
+      reason: required ? this._getRecalcReason(triggers) : 'no_significant_changes',
+      nextCheckTime: this._calculateNextCheckTime(triggers)
+    };
+  }
+}
+    
+
+4.2 Charging Optimization Service
+Generated javascript
+      /**
+ * ChargingOptimizationService - Advanced charging strategy optimization
+ */
+class ChargingOptimizationService {
+  constructor(dependencies) {
+    this.stationSelector = dependencies.stationSelector;
+    this.pricingOptimizer = dependencies.pricingOptimizer;
+    this.waitTimePredictor = dependencies.waitTimePredictor;
+    this.batteryModel = dependencies.batteryModel;
+    this.routeAnalyzer = dependencies.routeAnalyzer;
+  }
+
+  /**
+   * Optimize charging strategy for a complete route
+   * @param {Route} route - Route requiring charging optimization
+   * @param {Vehicle} vehicle - Vehicle specifications
+   * @param {ChargingPreferences} preferences - User charging preferences
+   * @returns {Promise<ChargingStrategy>}
+   */
+  async optimizeChargingStrategy(route, vehicle, preferences) 
+    // Analyze charging requirements
+    const chargingNeeds = await this._analyzeChargingNeeds(route, vehicle);
+    
+    if (!chargingNeeds.isChargingRequired) {
+      return {
+        strategy: 'no_charging_needed',
+        batteryAtDestination: chargingNeeds.batteryAtDestination,
+        bufferEnergy: chargingNeeds.bufferEnergy,
+        recommendations: this._generateNoChargingRecommendations(chargingNeeds)
+      };
+    }
+
+    // Generate charging scenarios
+    const scenarios = await this._generateChargingScenarios(route, vehicle, chargingNeeds);
+
+    // Evaluate each scenario
+    const evaluatedScenarios = await Promise.all(
+      scenarios.map(scenario => this._evaluateScenario(scenario, preferences))
+    );
+
+    // Select optimal scenario
+    const optimalScenario = this._selectOptimalScenario(evaluatedScenarios, preferences);
+
+    // Fine-tune the optimal scenario
+    const optimizedStrategy = await this._finetuneStrategy()
+    
+
