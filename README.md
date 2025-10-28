@@ -1,0 +1,1 @@
+irtual Campus Navigator is an intelligent Python-based web application built using Flask, Folium, and NetworkX. It helps students, visitors, and faculty easily navigate the campus by showing the shortest path between two selected campus locations on an interactive map.
