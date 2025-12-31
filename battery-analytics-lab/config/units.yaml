@@ -1,0 +1,544 @@
+# Battery Analytics Lab - Unit Standardization Configuration
+# SI Unit Enforcement for Complete CS2_35 Battery Data Processing
+#
+# Purpose: Define standard units and conversion factors for ALL CS2_35 measurements
+# Version: 2.0 - Complete CS2_35 Field Coverage
+# Created: 2025-12-29
+#
+# This configuration defines the target SI units and conversion factors
+# for standardizing ALL battery testing data measurements.
+
+# =============================================================================
+# SI STANDARD UNITS (TARGET UNITS)
+# =============================================================================
+
+si_standard_units:
+  current: "amperes"          # A
+  voltage: "volts"            # V
+  temperature: "celsius"      # °C
+  time: "seconds"             # s
+  capacity: "ampere-hours"    # Ah
+  power: "watts"              # W
+  energy: "watt-hours"        # Wh
+  resistance: "ohms"          # Ω
+  impedance: "ohms"           # Ω
+  phase_angle: "degrees"      # °
+  count: "count"              # count
+  datetime: "datetime"        # datetime
+  boolean: "boolean"          # boolean
+  voltage_rate: "volts_per_second"  # V/s
+
+# =============================================================================
+# UNIT CONVERSION FACTORS
+# =============================================================================
+
+conversion_factors:
+  # Current conversions to Amperes (A)
+  current:
+    to_amperes:
+      milliamperes: 0.001      # mA → A
+      microamperes: 0.000001   # μA → A
+      kiloamperes: 1000        # kA → A
+      amperes: 1.0             # A → A (no conversion)
+    
+    # Common battery test currents in mA
+    common_values:
+      "50mA": 0.05
+      "100mA": 0.1
+      "200mA": 0.2
+      "500mA": 0.5
+      "1000mA": 1.0
+      "2000mA": 2.0
+  
+  # Voltage conversions to Volts (V)
+  voltage:
+    to_volts:
+      millivolts: 0.001        # mV → V
+      microvolts: 0.000001     # μV → V
+      kilovolts: 1000          # kV → V
+      volts: 1.0               # V → V (no conversion)
+    
+    # Common battery voltages
+    common_values:
+      "3.7V": 3.7
+      "3.8V": 3.8
+      "4.2V": 4.2
+      "4.1V": 4.1
+  
+  # Temperature conversions to Celsius (°C)
+  temperature:
+    to_celsius:
+      fahrenheit: null         # Special formula: (F - 32) * 5/9
+      kelvin: null             # Special formula: K - 273.15
+      celsius: 1.0             # °C → °C (no conversion)
+      rankine: null            # Special formula: (R - 491.67) * 5/9
+  
+  # Time conversions to Seconds (s)
+  time:
+    to_seconds:
+      milliseconds: 0.001      # ms → s
+      microseconds: 0.000001   # μs → s
+      minutes: 60              # min → s
+      hours: 3600              # h → s
+      days: 86400              # day → s
+      seconds: 1.0             # s → s (no conversion)
+    
+    # Common time formats
+    common_formats:
+      "HH:MM:SS": "parse_hms"
+      "MM:SS": "parse_ms"
+      "decimal_hours": "multiply_by_3600"
+  
+  # Capacity conversions to Ampere-hours (Ah)
+  capacity:
+    to_ampere_hours:
+      milliampere_hours: 0.001 # mAh → Ah
+      microampere_hours: 0.000001 # μAh → Ah
+      kiloampere_hours: 1000   # kAh → Ah
+      ampere_hours: 1.0        # Ah → Ah (no conversion)
+      coulombs: null           # Special formula: C / 3600
+    
+    # Common battery capacities
+    common_values:
+      "1000mAh": 1.0
+      "2000mAh": 2.0
+      "2500mAh": 2.5
+      "3000mAh": 3.0
+
+  # Energy conversions to Watt-hours (Wh)
+  energy:
+    to_watt_hours:
+      milliwatt_hours: 0.001   # mWh → Wh
+      microwatt_hours: 0.000001 # μWh → Wh
+      kilowatt_hours: 1000     # kWh → Wh
+      watt_hours: 1.0          # Wh → Wh (no conversion)
+      joules: null             # Special formula: J / 3600
+    
+    # Common battery energies
+    common_values:
+      "3700mWh": 3.7
+      "7400mWh": 7.4
+      "11100mWh": 11.1
+
+  # Resistance and impedance conversions to Ohms (Ω)
+  resistance:
+    to_ohms:
+      milliohms: 0.001         # mΩ → Ω
+      microohms: 0.000001      # μΩ → Ω
+      kiloohms: 1000           # kΩ → Ω
+      ohms: 1.0                # Ω → Ω (no conversion)
+    
+    # Common resistance values
+    common_values:
+      "50mΩ": 0.05
+      "100mΩ": 0.1
+      "200mΩ": 0.2
+
+  impedance:
+    to_ohms:
+      milliohms: 0.001         # mΩ → Ω
+      microohms: 0.000001      # μΩ → Ω
+      kiloohms: 1000           # kΩ → Ω
+      ohms: 1.0                # Ω → Ω (no conversion)
+
+  # Voltage rate conversions to Volts per second (V/s)
+  voltage_rate:
+    to_volts_per_second:
+      millivolts_per_second: 0.001    # mV/s → V/s
+      microvolts_per_second: 0.000001 # μV/s → V/s
+      volts_per_second: 1.0           # V/s → V/s (no conversion)
+
+# =============================================================================
+# UNIT DETECTION PATTERNS
+# =============================================================================
+
+unit_detection:
+  patterns:
+    # Current units
+    current:
+      - "ma"      # milliamperes
+      - "ma."     # milliamperes with period
+      - "amp"     # amperes
+      - "a."      # amperes with period
+      - "a"       # amperes
+      - "μa"      # microamperes
+      - "ua"      # microamperes (alternative)
+      - "ka"      # kiloamperes
+    
+    # Voltage units
+    voltage:
+      - "mv"      # millivolts
+      - "mv."     # millivolts with period
+      - "v."      # volts with period
+      - "v"       # volts
+      - "volt"    # volts (full word)
+      - "volts"   # volts (plural)
+      - "μv"      # microvolts
+      - "uv"      # microvolts (alternative)
+      - "kv"      # kilovolts
+    
+    # Temperature units
+    temperature:
+      - "°c"      # celsius with degree symbol
+      - "c"       # celsius
+      - "celsius" # celsius (full word)
+      - "°f"      # fahrenheit with degree symbol
+      - "f"       # fahrenheit
+      - "fahrenheit" # fahrenheit (full word)
+      - "k"       # kelvin
+      - "kelvin"  # kelvin (full word)
+    
+    # Time units
+    time:
+      - "s"       # seconds
+      - "sec"     # seconds (abbreviated)
+      - "second"  # seconds (full word)
+      - "seconds" # seconds (plural)
+      - "ms"      # milliseconds
+      - "msec"    # milliseconds (abbreviated)
+      - "μs"      # microseconds
+      - "us"      # microseconds (alternative)
+      - "min"     # minutes
+      - "minute"  # minutes (full word)
+      - "minutes" # minutes (plural)
+      - "h"       # hours
+      - "hr"      # hours (abbreviated)
+      - "hour"    # hours (full word)
+      - "hours"   # hours (plural)
+      - "day"     # days
+      - "days"    # days (plural)
+    
+    # Capacity units
+    capacity:
+      - "mah"     # milliampere-hours
+      - "ma.h"    # milliampere-hours (with space)
+      - "ah"      # ampere-hours
+      - "a.h"     # ampere-hours (with space)
+      - "amp-hour" # ampere-hours (hyphenated)
+      - "ampere-hour" # ampere-hours (full)
+      - "μah"     # microampere-hours
+      - "uah"     # microampere-hours (alternative)
+      - "kah"     # kiloampere-hours
+
+    # Energy units
+    energy:
+      - "mwh"     # milliwatt-hours
+      - "mw.h"    # milliwatt-hours (with space)
+      - "wh"      # watt-hours
+      - "w.h"     # watt-hours (with space)
+      - "watt-hour" # watt-hours (hyphenated)
+      - "watt-hours" # watt-hours (full)
+      - "μwh"     # microwatt-hours
+      - "uwh"     # microwatt-hours (alternative)
+      - "kwh"     # kilowatt-hours
+
+    # Resistance and impedance units
+    resistance:
+      impedance:
+      - "mω"      # milliohms
+      - "mohm"    # milliohms (alternative)
+      - "ω"       # ohms with symbol
+      - "ohm"     # ohms (full word)
+      - "ohms"    # ohms (plural)
+      - "μω"      # microohms
+      - "uohm"    # microohms (alternative)
+      - "kω"      # kiloohms
+
+    # Phase angle units
+    phase_angle:
+      - "deg"     # degrees (abbreviated)
+      - "degree"  # degrees (full word)
+      - "degrees" # degrees (plural)
+      - "°"       # degrees symbol
+
+    # Voltage rate units
+    voltage_rate:
+      - "v/s"     # volts per second
+      - "vps"     # volts per second (abbreviated)
+      - "mv/s"    # millivolts per second
+      - "μv/s"    # microvolts per second
+
+# =============================================================================
+# COMPLETE CS2_35 COLUMN MAPPING
+# =============================================================================
+
+cs2_35_column_mapping:
+  # Identification and indexing columns
+  "Data_Point":
+    type: "integer"
+    unit: "count"
+    si_unit: "count"
+    description: "Sequential data point identifier"
+    
+  "Test_Time":
+    type: "float64"
+    unit: "seconds"
+    si_unit: "seconds"
+    description: "Elapsed time since test start"
+    
+  "Date_Time":
+    type: "datetime64"
+    unit: "datetime"
+    si_unit: "datetime"
+    description: "Absolute timestamp of measurement"
+    
+  "Step_Time":
+    type: "float64"
+    unit: "seconds"
+    si_unit: "seconds"
+    description: "Elapsed time within current test step"
+    
+  "Step_Index":
+    type: "integer"
+    unit: "count"
+    si_unit: "count"
+    description: "Sequential step identifier"
+    
+  "Cycle_Index":
+    type: "integer"
+    unit: "count"
+    si_unit: "count"
+    description: "Cycle number for cycling tests"
+    nullable: true
+
+  # Electrical measurements
+  "Current":
+    type: "float64"
+    unit: "amperes"
+    si_unit: "amperes"
+    description: "Current flowing through battery cell"
+    
+  "Voltage":
+    type: "float64"
+    unit: "volts"
+    si_unit: "volts"
+    description: "Terminal voltage of battery cell"
+
+  # Capacity and energy measurements
+  "Charge_Capacity":
+    type: "float64"
+    unit: "ampere-hours"
+    si_unit: "ampere-hours"
+    description: "Cumulative charge capacity during charging"
+    nullable: true
+    
+  "Discharge_Capacity":
+    type: "float64"
+    unit: "ampere-hours"
+    si_unit: "ampere-hours"
+    description: "Cumulative discharge capacity"
+    nullable: true
+    
+  "Charge_Energy":
+    type: "float64"
+    unit: "watt-hours"
+    si_unit: "watt-hours"
+    description: "Cumulative energy during charging"
+    nullable: true
+    
+  "Discharge_Energy":
+    type: "float64"
+    unit: "watt-hours"
+    si_unit: "watt-hours"
+    description: "Cumulative energy during discharge"
+    nullable: true
+
+  # Derived measurements
+  "dV/dt":
+    type: "float64"
+    unit: "volts_per_second"
+    si_unit: "volts_per_second"
+    description: "Rate of voltage change"
+    nullable: true
+    
+  "Internal_Resistance":
+    type: "float64"
+    unit: "ohms"
+    si_unit: "ohms"
+    description: "Internal resistance of battery cell"
+    nullable: true
+
+  # AC impedance measurements
+  "Is_FC_Data":
+    type: "boolean"
+    unit: "boolean"
+    si_unit: "boolean"
+    description: "Flag for fractional capacity data"
+    
+  "AC_Impedance":
+    type: "float64"
+    unit: "ohms"
+    si_unit: "ohms"
+    description: "AC impedance magnitude"
+    nullable: true
+    
+  "ACI_Phase_Angle":
+    type: "float64"
+    unit: "degrees"
+    si_unit: "degrees"
+    description: "Phase angle of AC impedance"
+    nullable: true
+
+# =============================================================================
+# STANDARDIZATION RULES
+# =============================================================================
+
+standardization_rules:
+  # Column name mapping for ALL CS2_35 columns
+  column_mapping:
+    # Identification columns
+    data_point_columns:
+      - "data_point"
+      - "point_index"
+      - "measurement_number"
+    
+    time_columns:
+      - "test_time"
+      - "time"
+      - "timestamp"
+      - "elapsed_time"
+      - "duration"
+    
+    datetime_columns:
+      - "datetime"
+      - "date_time"
+      - "timestamp_absolute"
+      - "measurement_time"
+    
+    step_columns:
+      - "step_time"
+      - "step_duration"
+      - "step_elapsed"
+      - "step_index"
+      - "step_number"
+    
+    cycle_columns:
+      - "cycle_index"
+      - "cycle_number"
+      - "cycle_count"
+    
+    # Electrical columns
+    voltage_columns:
+      - "voltage"
+      - "volt"
+      - "v"
+      - "terminal_voltage"
+      - "cell_voltage"
+    
+    current_columns:
+      - "current"
+      - "amp"
+      - "i"
+      - "current_flow"
+      - "cell_current"
+    
+    # Capacity columns
+    charge_capacity_columns:
+      - "charge_capacity"
+      - "charge_cap"
+      - "charged_capacity"
+    
+    discharge_capacity_columns:
+      - "discharge_capacity"
+      - "discharge_cap"
+      - "discharged_capacity"
+      - "capacity"
+    
+    # Energy columns
+    charge_energy_columns:
+      - "charge_energy"
+      - "charged_energy"
+      - "energy_in"
+    
+    discharge_energy_columns:
+      - "discharge_energy"
+      - "discharged_energy"
+      - "energy_out"
+    
+    # Derived columns
+    voltage_rate_columns:
+      - "dv/dt"
+      - "dvd_t"
+      - "voltage_rate"
+      - "voltage_derivative"
+    
+    resistance_columns:
+      - "internal_resistance"
+      - "resistance"
+      - "ir"
+      - "dc_resistance"
+    
+    # AC impedance columns
+    fc_data_columns:
+      - "is_fc_data"
+      - "fc_data"
+      - "fractional_capacity"
+    
+    impedance_columns:
+      - "ac_impedance"
+      - "impedance"
+      - "ac_resistance"
+    
+    phase_angle_columns:
+      - "aci_phase_angle"
+      - "phase_angle"
+      - "phase"
+      - "phase_shift"
+
+# =============================================================================
+# QUALITY ASSURANCE
+# =============================================================================
+
+quality_assurance:
+  # Validation rules after conversion
+  post_conversion_validation:
+    # Check for reasonable values after SI conversion
+    reasonable_ranges:
+      voltage: [2.0, 5.0]           # V - typical Li-ion range
+      current: [-10.0, 10.0]        # A - reasonable test current
+      temperature: [-10.0, 80.0]    # °C - operating range
+      capacity: [0.0, 10.0]         # Ah - typical cell capacity
+      energy: [0.0, 50.0]           # Wh - typical cell energy
+      time: [0.0, 86400.0]          # s - up to 24 hours
+      resistance: [0.001, 10.0]     # Ω - reasonable resistance range
+      impedance: [0.001, 10.0]      # Ω - reasonable impedance range
+      phase_angle: [-180.0, 180.0]  # ° - full phase range
+    
+    # CS2_35 specific validation ranges
+    cs2_35_specific_ranges:
+      test_time: [0.0, 172800.0]    # s - up to 48 hours
+      step_time: [0.0, 7200.0]      # s - up to 2 hours per step
+      cycle_index: [1, 10000]       # count - reasonable cycle range
+      data_point: [1, 1000000]      # count - reasonable data point range
+    
+    # Check for conversion errors
+    conversion_error_detection:
+      zero_values_after_conversion: true
+      extremely_large_values: true
+      negative_time_values: true
+      temperature_out_of_bounds: true
+      voltage_out_of_bounds: true
+      current_spike_detection: true
+
+# =============================================================================
+# CONFIGURATION METADATA
+# =============================================================================
+
+configuration_info:
+  configuration_name: "units_standardization_complete_cs2_35"
+  version: "2.0"
+  created_date: "2025-12-29"
+  last_updated: "2025-12-29"
+  purpose: "Complete SI unit standardization for ALL CS2_35 battery analytics data"
+  dataset_compatibility: ["CS2_35"]
+  enforcement_level: "strict"
+  coverage_note: "This configuration handles ALL fields in CS2_35 dataset, not just basic measurements"
+
+---
+# End of Complete Unit Standardization Configuration
+# This configuration ensures consistent SI unit usage across ALL
+# battery analytics data processing pipelines.
+#
+# Version 2.0 includes complete CS2_35 field coverage
+# Last Updated: 2025-12-29
+# Next Review: 2026-01-29

@@ -1,0 +1,122 @@
+# Battery Analytics Lab - Feature Schema Definition
+# Phase 1: Data Ingestion & Standardization Schema
+
+schema_version: "1.0"
+project: "battery-analytics-lab"
+phase: "1_ingestion_standardization"
+created_date: "2025-12-29"
+
+# Raw Data Schema (CS2_35 Dataset)
+raw_data_schema:
+  source_format: "excel"
+  file_extension: ".xlsx"
+  required_columns:
+    time: "timestamp (seconds)"
+    voltage: "voltage (V)"
+    current: "current (A)"
+    capacity: "capacity (Ah)"
+    temperature: "temperature (°C)"
+  
+  data_types:
+    time: "float64"
+    voltage: "float64"
+    current: "float64"
+    capacity: "float64"
+    temperature: "float64"
+  
+  value_ranges:
+    voltage: 
+      min: 2.5
+      max: 4.5
+      unit: "V"
+    current:
+      min: -5.0
+      max: 5.0
+      unit: "A"
+    capacity:
+      min: 0.0
+      max: 5.0
+      unit: "Ah"
+    temperature:
+      min: 0.0
+      max: 60.0
+      unit: "°C"
+
+# Standardized Data Schema
+standardized_data_schema:
+  output_format: "parquet"
+  compression: "snappy"
+  
+  required_columns:
+    timestamp: "standardized timestamp (seconds from start)"
+    voltage_v: "voltage (V) - normalized"
+    current_a: "current (A) - normalized"
+    capacity_ah: "capacity (Ah) - normalized"
+    temperature_c: "temperature (°C) - normalized"
+    cycle_number: "cycle identifier"
+    phase_type: "charge/discharge/rest"
+  
+  metadata_fields:
+    cell_id: "unique cell identifier"
+    test_date: "original test date"
+    file_source: "source filename"
+    standardization_version: "schema version used"
+    processing_timestamp: "when standardized"
+    data_quality_score: "quality assessment (0-1)"
+
+# Validation Criteria
+validation_criteria:
+  min_cycles_per_file: 1
+  max_cycles_per_file: 1000
+  min_data_points_per_cycle: 10
+  max_data_points_per_cycle: 100000
+  
+  quality_thresholds:
+    voltage_completeness: 0.95    # 95% of expected voltage readings
+    current_completeness: 0.95    # 95% of expected current readings
+    temperature_completeness: 0.90 # 90% of expected temperature readings
+    max_gap_duration: 10.0        # maximum gap in seconds
+  
+  anomaly_detection:
+    voltage_spikes: 3.0           # 3 standard deviations
+    current_anomalies: 5.0        # 5 standard deviations
+    temperature_anomalies: 2.5    # 2.5 standard deviations
+
+# Metadata Schema
+metadata_schema:
+  cell_registry:
+    required_fields:
+      - cell_id
+      - chemistry_type
+      - nominal_capacity
+      - manufacturer
+      - test_date
+      - file_source
+  
+  experiment_log:
+    required_fields:
+      - processing_id
+      - timestamp
+      - operation_type
+      - files_processed
+      - records_ingested
+      - validation_passed
+      - validation_failed
+      - processing_status
+      - notes
+
+# Processing Parameters
+processing_params:
+  chunk_size: 1000              # rows per processing chunk
+  memory_limit_mb: 1024         # maximum memory usage
+  parallel_processes: 4         # number of parallel workers
+  backup_enabled: true          # create backups during processing
+  log_level: "INFO"             # logging level
+  
+# Output Directories
+output_directories:
+  standardized_data: "data/standardized/"
+  validated_data: "data/validated/"
+  metadata_updates: "metadata/"
+  processing_logs: "logs/"
+  incident_reports: "logs/incidents/"
