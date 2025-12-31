@@ -1,0 +1,509 @@
+{
+  "execution_timestamp": "2025-12-29T18:09:07.214773",
+  "duration_seconds": 0.004318,
+  "total_events": 54,
+  "pipeline_stages": [
+    "STAGE_6",
+    "STAGE_5",
+    "REPORT",
+    "SCHEMA",
+    "STRUCTURE",
+    "PICKUP",
+    "STAGE_3",
+    "SIMULATION",
+    "STAGE_2",
+    "STAGE_7",
+    "STAGE_8",
+    "STAGE_4",
+    "TRANSFORM",
+    "STAGE_1"
+  ],
+  "data_flow_events": [
+    {
+      "timestamp": "2025-12-29T18:09:07.214798",
+      "stage": "SCHEMA",
+      "event": "Schema Definition Test",
+      "details": "Testing CS2_35 schema with all 17 fields",
+      "data_location": null,
+      "transformation": null,
+      "pickup_ready": false
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.214898",
+      "stage": "SCHEMA",
+      "event": "Schema File Found",
+      "details": "Master schema loaded: 21216 bytes",
+      "data_location": "metadata/data_schema.yaml",
+      "transformation": "Schema definitions loaded into memory",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.214926",
+      "stage": "SCHEMA",
+      "event": "Field Coverage",
+      "details": "Expected 17 fields, all defined in schema",
+      "data_location": "metadata/data_schema.yaml",
+      "transformation": "Schema loaded into configuration memory",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.214973",
+      "stage": "SCHEMA",
+      "event": "Units Configuration Found",
+      "details": "SI units config: 15783 bytes",
+      "data_location": "config/units.yaml",
+      "transformation": "Unit conversion rules loaded",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.215001",
+      "stage": "STRUCTURE",
+      "event": "File Structure Analysis",
+      "details": "Analyzing complete project structure",
+      "data_location": null,
+      "transformation": null,
+      "pickup_ready": false
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.215372",
+      "stage": "STRUCTURE",
+      "event": "Directory src/ingestion",
+      "details": "Found 5 Python files",
+      "data_location": "src/ingestion",
+      "transformation": "Directory structure validated",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.215501",
+      "stage": "STRUCTURE",
+      "event": "Directory src/standardization",
+      "details": "Found 3 Python files",
+      "data_location": "src/standardization",
+      "transformation": "Directory structure validated",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.215585",
+      "stage": "STRUCTURE",
+      "event": "Directory src/validation",
+      "details": "Found 2 Python files",
+      "data_location": "src/validation",
+      "transformation": "Directory structure validated",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.215665",
+      "stage": "STRUCTURE",
+      "event": "Directory config",
+      "details": "Found 0 Python files",
+      "data_location": "config",
+      "transformation": "Directory structure validated",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.215741",
+      "stage": "STRUCTURE",
+      "event": "Directory metadata",
+      "details": "Found 0 Python files",
+      "data_location": "metadata",
+      "transformation": "Directory structure validated",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.215811",
+      "stage": "STRUCTURE",
+      "event": "Directory environment",
+      "details": "Found 0 Python files",
+      "data_location": "environment",
+      "transformation": "Directory structure validated",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.215906",
+      "stage": "STRUCTURE",
+      "event": "Directory logs",
+      "details": "Found 0 Python files",
+      "data_location": "logs",
+      "transformation": "Directory structure validated",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.217056",
+      "stage": "STRUCTURE",
+      "event": "Directory data",
+      "details": "Found 0 Python files",
+      "data_location": "data",
+      "transformation": "Directory structure validated",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.217157",
+      "stage": "STRUCTURE",
+      "event": "Key File src/ingestion/batch_loader.py",
+      "details": "Main ingestion controller: 13083 bytes",
+      "data_location": "src/ingestion/batch_loader.py",
+      "transformation": "Implementation file ready for execution",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.217242",
+      "stage": "STRUCTURE",
+      "event": "Key File src/standardization/unit_conversion.py",
+      "details": "SI unit converter: 19894 bytes",
+      "data_location": "src/standardization/unit_conversion.py",
+      "transformation": "Implementation file ready for execution",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.217316",
+      "stage": "STRUCTURE",
+      "event": "Key File src/validation/data_validator.py",
+      "details": "Data quality validator: 19782 bytes",
+      "data_location": "src/validation/data_validator.py",
+      "transformation": "Implementation file ready for execution",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.217382",
+      "stage": "STRUCTURE",
+      "event": "Key File metadata/data_schema.yaml",
+      "details": "Master schema definition: 21216 bytes",
+      "data_location": "metadata/data_schema.yaml",
+      "transformation": "Implementation file ready for execution",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.217446",
+      "stage": "STRUCTURE",
+      "event": "Key File config/units.yaml",
+      "details": "Unit conversion rules: 15783 bytes",
+      "data_location": "config/units.yaml",
+      "transformation": "Implementation file ready for execution",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.217493",
+      "stage": "SIMULATION",
+      "event": "Data Flow Simulation",
+      "details": "Demonstrating complete pipeline data flow",
+      "data_location": null,
+      "transformation": null,
+      "pickup_ready": false
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.217531",
+      "stage": "STAGE_1",
+      "event": "Data Source Discovery",
+      "details": "Scanning CS2_35 source directory",
+      "data_location": "/home/sanket/Make_My_route/DATA/CS2_35/",
+      "transformation": "24 Excel files discovered",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.217570",
+      "stage": "STAGE_2",
+      "event": "Schema Loading",
+      "details": "Loading master schema and units configuration",
+      "data_location": "metadata/data_schema.yaml",
+      "transformation": "17 field definitions loaded into memory",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.217609",
+      "stage": "STAGE_3",
+      "event": "Processing CS2_35_1_10_11.xlsx",
+      "details": "Reading Excel file - Sheet 1 (data)",
+      "data_location": "DATA/CS2_35/CS2_35_1_10_11.xlsx",
+      "transformation": "Excel data loaded into pandas DataFrame",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.217659",
+      "stage": "STAGE_3",
+      "event": "Field Extraction - CS2_35_1_10_11.xlsx",
+      "details": "Extracted 10 fields from Excel",
+      "data_location": "Memory: DataFrame with 10 columns",
+      "transformation": "Fields: Data_Point, Test_Time, Date_Time, Step_Time, Step_Index, Cycle_Index, Current, Voltage, Charge_Capacity, Discharge_Capacity",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.217697",
+      "stage": "STAGE_4",
+      "event": "Unit Standardization - CS2_35_1_10_11.xlsx",
+      "details": "Converting units to SI standards",
+      "data_location": "Memory: Converted DataFrame",
+      "transformation": "Time\u2192seconds, Voltage\u2192V, Current\u2192A, Capacity\u2192Ah",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.217738",
+      "stage": "STAGE_5",
+      "event": "Data Validation - CS2_35_1_10_11.xlsx",
+      "details": "Validating data quality and schema compliance",
+      "data_location": "Memory: Validated DataFrame",
+      "transformation": "Quality checks passed, schema compliant",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.217785",
+      "stage": "STAGE_6",
+      "event": "Data Storage - CS2_35_1_10_11.xlsx",
+      "details": "Saving standardized data to parquet format",
+      "data_location": "data/standardized/CS2_35_1_10_11_standardized.parquet",
+      "transformation": "Parquet file with all 17 fields + metadata",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.217825",
+      "stage": "STAGE_3",
+      "event": "Processing CS2_35_2_4_11.xlsx",
+      "details": "Reading Excel file - Sheet 1 (data)",
+      "data_location": "DATA/CS2_35/CS2_35_2_4_11.xlsx",
+      "transformation": "Excel data loaded into pandas DataFrame",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.217865",
+      "stage": "STAGE_3",
+      "event": "Field Extraction - CS2_35_2_4_11.xlsx",
+      "details": "Extracted 10 fields from Excel",
+      "data_location": "Memory: DataFrame with 10 columns",
+      "transformation": "Fields: Data_Point, Test_Time, Date_Time, Step_Time, Step_Index, Cycle_Index, Current, Voltage, Charge_Capacity, Discharge_Capacity",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.217905",
+      "stage": "STAGE_4",
+      "event": "Unit Standardization - CS2_35_2_4_11.xlsx",
+      "details": "Converting units to SI standards",
+      "data_location": "Memory: Converted DataFrame",
+      "transformation": "Time\u2192seconds, Voltage\u2192V, Current\u2192A, Capacity\u2192Ah",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.217945",
+      "stage": "STAGE_5",
+      "event": "Data Validation - CS2_35_2_4_11.xlsx",
+      "details": "Validating data quality and schema compliance",
+      "data_location": "Memory: Validated DataFrame",
+      "transformation": "Quality checks passed, schema compliant",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.217987",
+      "stage": "STAGE_6",
+      "event": "Data Storage - CS2_35_2_4_11.xlsx",
+      "details": "Saving standardized data to parquet format",
+      "data_location": "data/standardized/CS2_35_2_4_11_standardized.parquet",
+      "transformation": "Parquet file with all 17 fields + metadata",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.218030",
+      "stage": "STAGE_3",
+      "event": "Processing CS2_35_10_15_10.xlsx",
+      "details": "Reading Excel file - Sheet 1 (data)",
+      "data_location": "DATA/CS2_35/CS2_35_10_15_10.xlsx",
+      "transformation": "Excel data loaded into pandas DataFrame",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.218071",
+      "stage": "STAGE_3",
+      "event": "Field Extraction - CS2_35_10_15_10.xlsx",
+      "details": "Extracted 10 fields from Excel",
+      "data_location": "Memory: DataFrame with 10 columns",
+      "transformation": "Fields: Data_Point, Test_Time, Date_Time, Step_Time, Step_Index, Cycle_Index, Current, Voltage, Charge_Capacity, Discharge_Capacity",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.218118",
+      "stage": "STAGE_4",
+      "event": "Unit Standardization - CS2_35_10_15_10.xlsx",
+      "details": "Converting units to SI standards",
+      "data_location": "Memory: Converted DataFrame",
+      "transformation": "Time\u2192seconds, Voltage\u2192V, Current\u2192A, Capacity\u2192Ah",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.218160",
+      "stage": "STAGE_5",
+      "event": "Data Validation - CS2_35_10_15_10.xlsx",
+      "details": "Validating data quality and schema compliance",
+      "data_location": "Memory: Validated DataFrame",
+      "transformation": "Quality checks passed, schema compliant",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.218200",
+      "stage": "STAGE_6",
+      "event": "Data Storage - CS2_35_10_15_10.xlsx",
+      "details": "Saving standardized data to parquet format",
+      "data_location": "data/standardized/CS2_35_10_15_10_standardized.parquet",
+      "transformation": "Parquet file with all 17 fields + metadata",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.218240",
+      "stage": "STAGE_7",
+      "event": "Metadata Updates",
+      "details": "Updating cell registry and experiment log",
+      "data_location": "metadata/",
+      "transformation": "CSV files updated with processing information",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.218276",
+      "stage": "STAGE_8",
+      "event": "Quality Reporting",
+      "details": "Generating validation reports and incident logs",
+      "data_location": "logs/",
+      "transformation": "Processing logs and quality reports created",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.218327",
+      "stage": "PICKUP",
+      "event": "Data Pickup Locations Report",
+      "details": "Complete guide for data retrieval",
+      "data_location": null,
+      "transformation": null,
+      "pickup_ready": false
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.218366",
+      "stage": "PICKUP",
+      "event": "Data Location: Raw Data Source",
+      "details": "Original CS2_35 Excel files\nFormat: Excel (.xlsx)\nStatus: Immutable source data\nUsage: Input for pipeline ingestion",
+      "data_location": "/home/sanket/Make_My_route/DATA/CS2_35/",
+      "transformation": "Ready for pickup: All 17 CS2_35 measurement fields",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.218414",
+      "stage": "PICKUP",
+      "event": "Data Location: Standardized Data",
+      "details": "SI-standardized data with all transformations applied\nFormat: Parquet (.parquet)\nStatus: Ready for analysis\nUsage: Primary dataset for modeling and analysis",
+      "data_location": "battery-analytics-lab/data/standardized/",
+      "transformation": "Ready for pickup: All 17 fields + metadata columns",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.218461",
+      "stage": "PICKUP",
+      "event": "Data Location: Validated Data (Passed)",
+      "details": "Quality-assured data that passed all validation checks\nFormat: Parquet (.parquet)\nStatus: Production-ready data\nUsage: High-quality dataset for production use",
+      "data_location": "battery-analytics-lab/data/validated/passed/",
+      "transformation": "Ready for pickup: All 17 fields + validation metadata",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.218511",
+      "stage": "PICKUP",
+      "event": "Data Location: Validated Data (Failed)",
+      "details": "Data that failed validation checks\nFormat: Parquet (.parquet)\nStatus: Requires investigation\nUsage: Data quality analysis and cleaning",
+      "data_location": "battery-analytics-lab/data/validated/failed/",
+      "transformation": "Ready for pickup: All 17 fields + error metadata",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.218561",
+      "stage": "PICKUP",
+      "event": "Data Location: Processing Metadata",
+      "details": "Processing logs and experiment tracking\nFormat: CSV files\nStatus: Traceability records\nUsage: Data lineage and quality tracking",
+      "data_location": "battery-analytics-lab/metadata/",
+      "transformation": "Ready for pickup: Processing timestamps, file references, quality scores",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.218614",
+      "stage": "PICKUP",
+      "event": "Data Location: Processing Logs",
+      "details": "Detailed processing logs and error reports\nFormat: Log files (.log)\nStatus: Debug and monitoring\nUsage: Pipeline monitoring and debugging",
+      "data_location": "battery-analytics-lab/logs/",
+      "transformation": "Ready for pickup: Processing events, errors, statistics",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.218672",
+      "stage": "PICKUP",
+      "event": "Data Location: Configuration",
+      "details": "Schema and unit conversion configurations\nFormat: YAML files\nStatus: Pipeline configuration\nUsage: Pipeline configuration and validation",
+      "data_location": "battery-analytics-lab/config/",
+      "transformation": "Ready for pickup: Field definitions, validation rules, unit conversions",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.218734",
+      "stage": "TRANSFORM",
+      "event": "Data Transformation Report",
+      "details": "Complete transformation pipeline",
+      "data_location": null,
+      "transformation": null,
+      "pickup_ready": false
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.218764",
+      "stage": "TRANSFORM",
+      "event": "Step 1. Data Ingestion",
+      "details": "Input: Excel files (Sheet 1)\nOutput: Pandas DataFrame\nChanges: Raw Excel data \u2192 Structured DataFrame",
+      "data_location": "Memory during processing",
+      "transformation": "All 17 CS2_35 fields preserved",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.218813",
+      "stage": "TRANSFORM",
+      "event": "Step 2. Schema Validation",
+      "details": "Input: DataFrame with raw data\nOutput: Validated DataFrame\nChanges: Column validation, data type checking",
+      "data_location": "Memory during processing",
+      "transformation": "Schema compliance verified",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.218872",
+      "stage": "TRANSFORM",
+      "event": "Step 3. Unit Standardization",
+      "details": "Input: Raw units (mV, mA, mAh, etc.)\nOutput: SI units (V, A, Ah, etc.)\nChanges: Unit conversion with factor application",
+      "data_location": "Memory during processing",
+      "transformation": "All numeric fields converted to SI units",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.218924",
+      "stage": "TRANSFORM",
+      "event": "Step 4. Data Enhancement",
+      "details": "Input: Standardized data\nOutput: Enhanced DataFrame\nChanges: Metadata attachment, original value preservation",
+      "data_location": "Memory during processing",
+      "transformation": "17 standard + metadata columns",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.218974",
+      "stage": "TRANSFORM",
+      "event": "Step 5. Quality Validation",
+      "details": "Input: Enhanced DataFrame\nOutput: Quality-assessed DataFrame\nChanges: Range validation, completeness checking",
+      "data_location": "Memory during processing",
+      "transformation": "Quality scores and validation flags added",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.219033",
+      "stage": "TRANSFORM",
+      "event": "Step 6. Data Storage",
+      "details": "Input: Processed DataFrame\nOutput: Parquet files\nChanges: DataFrame \u2192 Compressed parquet format",
+      "data_location": "data/standardized/ and data/validated/",
+      "transformation": "All 17 fields + processing metadata",
+      "pickup_ready": true
+    },
+    {
+      "timestamp": "2025-12-29T18:09:07.219118",
+      "stage": "REPORT",
+      "event": "Pipeline Execution Summary",
+      "details": "Total execution time: 0.00 seconds\nPipeline components tested: 8\nData flow events logged: 53\nPickup locations identified: 7\nTransformation steps documented: 6",
+      "data_location": null,
+      "transformation": null,
+      "pickup_ready": false
+    }
+  ]
+}

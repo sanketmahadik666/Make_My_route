@@ -1,0 +1,404 @@
+"""
+Battery Analytics Lab - Data Standardization Module
+Phase 1: Data Ingestion & Standardization
+
+This module handles the standardization of raw battery data into a consistent format
+for downstream analysis.
+
+Author: Battery Analytics Lab Team
+Date: 2025-12-29
+Version: 1.0
+"""
+
+import pandas as pd
+import numpy as np
+import yaml
+import logging
+from pathlib import Path
+from datetime import datetime
+from typing import Dict, List, Tuple, Optional, Any
+import warnings
+
+# Suppress warnings for cleaner output
+warnings.filterwarnings('ignore')
+
+class DataStandardizer:
+    """
+    Main class for standardizing battery data from raw format to standardized format.
+    """
+    
+    def __init__(self, config_path: str = "battery-analytics-lab/config/feature_schema.yaml"):
+        """
+        Initialize the DataStandardizer with configuration.
+        
+        Args:
+            config_path: Path to the feature schema configuration file
+        """
+        self.config_path = config_path
+        self.config = self._load_config()
+        self.logger = self._setup_logging()
+        self.processing_stats = {
+            'files_processed': 0,
+            'total_records': 0,
+            'standardization_errors': 0,
+            'warnings_issued': 0
+        }
+    
+    def _load_config(self) -> Dict[str, Any]:
+        """Load configuration from YAML file."""
+        try:
+            with open(self.config_path, 'r') as f:
+                return yaml.safe_load(f)
+        except FileNotFoundError:
+            logging.error(f"Configuration file not found: {self.config_path}")
+            raise
+        except yaml.YAMLError as e:
+            logging.error(f"Error parsing configuration file: {e}")
+            raise
+    
+    def _setup_logging(self) -> logging.Logger:
+        """Set up logging for standardization process."""
+        logger = logging.getLogger('data_standardizer')
+        logger.setLevel(logging.INFO)
+        
+        # Create logs directory if it doesn't exist
+        log_dir = Path('battery-analytics-lab/logs')
+        log_dir.mkdir(parents=True, exist_ok=True)
+        
+        # File handler
+        file_handler = logging.FileHandler(log_dir / 'standardization.log')
+        file_handler.setLevel(logging.INFO)
+        
+        # Console handler
+        console_handler = logging.StreamHandler()
+        console_handler.setLevel(logging.INFO)
+        
+        # Formatter
+        formatter = logging.Formatter(
+            '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        )
+        file_handler.setFormatter(formatter)
+        console_handler.setFormatter(formatter)
+        
+        logger.addHandler(file_handler)
+        logger.addHandler(console_handler)
+        
+        return logger
+    
+    def standardize_excel_file(self, 
+                             file_path: str, 
+                             output_dir: str = "battery-analytics-lab/data/standardized/") -> Dict[str, Any]:
+        """
+        Standardize a single Excel file containing battery data.
+        
+        Args:
+            file_path: Path to the source Excel file
+            output_dir: Directory to save standardized data
+            
+        Returns:
+            Dictionary containing processing results and metadata
+        """
+        try:
+            self.logger.info(f"Starting standardization of file: {file_path}")
+            
+            # Read Excel file
+            df = self._read_excel_file(file_path)
+            
+            # Extract metadata
+            metadata = self._extract_metadata(file_path, df)
+            
+            # Standardize column names and data
+            standardized_df = self._standardize_data(df)
+            
+            # Add metadata columns
+            standardized_df = self._attach_metadata(standardized_df, metadata)
+            
+            # Save standardized data
+            output_path = self._save_standardized_data(standardized_df, output_dir, metadata)
+            
+            # Update statistics
+            self.processing_stats['files_processed'] += 1
+            self.processing_stats['total_records'] += len(standardized_df)
+            
+            self.logger.info(f"Successfully standardized {len(standardized_df)} records from {file_path}")
+            
+            return {
+                'status': 'success',
+                'file_path': file_path,
+                'output_path': output_path,
+                'records_processed': len(standardized_df),
+                'metadata': metadata,
+                'processing_timestamp': datetime.now().isoformat()
+            }
+            
+        except Exception as e:
+            self.processing_stats['standardization_errors'] += 1
+            self.logger.error(f"Error standardizing file {file_path}: {str(e)}")
+            return {
+                'status': 'error',
+                'file_path': file_path,
+                'error_message': str(e),
+                'processing_timestamp': datetime.now().isoformat()
+            }
+    
+    def _read_excel_file(self, file_path: str) -> pd.DataFrame:
+        """Read Excel file and return DataFrame."""
+        try:
+            # Try reading different sheet names
+            xl_file = pd.ExcelFile(file_path)
+            sheet_names = xl_file.sheet_names
+            
+            # Use first sheet or look for data sheet
+            if 'Data' in sheet_names:
+                df = pd.read_excel(file_path, sheet_name='Data')
+            elif 'Sheet1' in sheet_names:
+                df = pd.read_excel(file_path, sheet_name='Sheet1')
+            else:
+                df = pd.read_excel(file_path, sheet_name=sheet_names[0])
+            
+            self.logger.info(f"Read {len(df)} rows from {file_path}")
+            return df
+            
+        except Exception as e:
+            self.logger.error(f"Error reading Excel file {file_path}: {str(e)}")
+            raise
+    
+    def _extract_metadata(self, file_path: str, df: pd.DataFrame) -> Dict[str, Any]:
+        """Extract metadata from file and data."""
+        file_name = Path(file_path).name
+        cell_id = self._extract_cell_id(file_name)
+        
+        # Extract test date from filename if possible
+        test_date = self._extract_test_date(file_name)
+        
+        metadata = {
+            'cell_id': cell_id,
+            'test_date': test_date,
+            'file_source': file_name,
+            'standardization_version': self.config['schema_version'],
+            'processing_timestamp': datetime.now().isoformat(),
+            'original_columns': list(df.columns),
+            'original_row_count': len(df),
+            'data_quality_score': self._calculate_initial_quality_score(df)
+        }
+        
+        return metadata
+    
+    def _extract_cell_id(self, file_name: str) -> str:
+        """Extract cell ID from filename."""
+        # Extract from CS2_35 format: CS2_35_MM_DD_YY.xlsx
+        parts = file_name.replace('.xlsx', '').split('_')
+        if len(parts) >= 3:
+            return f"{parts[0]}_{parts[1]}"
+        return file_name.replace('.xlsx', '')
+    
+    def _extract_test_date(self, file_name: str) -> Optional[str]:
+        """Extract test date from filename."""
+        try:
+            # Extract date from filename format: CS2_35_MM_DD_YY.xlsx
+            parts = file_name.replace('.xlsx', '').split('_')
+            if len(parts) >= 5:
+                month, day, year = parts[2], parts[3], parts[4]
+                # Convert 2-digit year to 4-digit
+                if len(year) == 2:
+                    year = f"20{year}"
+                return f"{year}-{month.zfill(2)}-{day.zfill(2)}"
+        except:
+            pass
+        return None
+    
+    def _calculate_initial_quality_score(self, df: pd.DataFrame) -> float:
+        """Calculate initial data quality score."""
+        try:
+            # Check for required columns
+            required_cols = self.config['raw_data_schema']['required_columns']
+            available_cols = list(df.columns)
+            
+            # Count matching columns (case-insensitive)
+            matched_cols = 0
+            for req_col in required_cols.keys():
+                for avail_col in available_cols:
+                    if req_col.lower() in avail_col.lower():
+                        matched_cols += 1
+                        break
+            
+            column_match_score = matched_cols / len(required_cols)
+            
+            # Check for missing values
+            missing_ratio = df.isnull().sum().sum() / (len(df) * len(df.columns))
+            completeness_score = 1.0 - missing_ratio
+            
+            # Combine scores
+            quality_score = (column_match_score + completeness_score) / 2
+            return min(quality_score, 1.0)
+            
+        except:
+            return 0.0
+    
+    def _standardize_data(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Standardize column names and data types."""
+        standardized_df = df.copy()
+        
+        # Map column names to standardized format
+        column_mapping = self._create_column_mapping(standardized_df.columns)
+        standardized_df = standardized_df.rename(columns=column_mapping)
+        
+        # Standardize data types and units
+        standardized_df = self._standardize_data_types(standardized_df)
+        
+        # Add cycle numbering (simplified)
+        standardized_df = self._add_cycle_numbering(standardized_df)
+        
+        # Add phase type classification
+        standardized_df = self._classify_phases(standardized_df)
+        
+        return standardized_df
+    
+    def _create_column_mapping(self, columns: List[str]) -> Dict[str, str]:
+        """Create mapping from original to standardized column names."""
+        mapping = {}
+        
+        for col in columns:
+            col_lower = col.lower()
+            
+            # Time/timestamp columns
+            if any(keyword in col_lower for keyword in ['time', 'timestamp', 'date']):
+                mapping[col] = 'timestamp'
+            
+            # Voltage columns
+            elif any(keyword in col_lower for keyword in ['voltage', 'volt', 'v']):
+                mapping[col] = 'voltage_v'
+            
+            # Current columns
+            elif any(keyword in col_lower for keyword in ['current', 'amp', 'a']):
+                mapping[col] = 'current_a'
+            
+            # Capacity columns
+            elif any(keyword in col_lower for keyword in ['capacity', 'cap', 'ah']):
+                mapping[col] = 'capacity_ah'
+            
+            # Temperature columns
+            elif any(keyword in col_lower for keyword in ['temperature', 'temp', 'c']):
+                mapping[col] = 'temperature_c'
+            
+            # Default: keep original name
+            else:
+                mapping[col] = col
+        
+        return mapping
+    
+    def _standardize_data_types(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Standardize data types and apply unit conversions."""
+        # Convert numeric columns
+        numeric_cols = ['timestamp', 'voltage_v', 'current_a', 'capacity_ah', 'temperature_c']
+        
+        for col in numeric_cols:
+            if col in df.columns:
+                try:
+                    df[col] = pd.to_numeric(df[col], errors='coerce')
+                except:
+                    self.logger.warning(f"Could not convert {col} to numeric type")
+        
+        # Apply unit conversions if needed
+        df = self._apply_unit_conversions(df)
+        
+        return df
+    
+    def _apply_unit_conversions(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Apply unit conversions to match standardized format."""
+        # Convert timestamp to seconds from start
+        if 'timestamp' in df.columns and not df['timestamp'].isna().all():
+            df['timestamp'] = df['timestamp'] - df['timestamp'].min()
+        
+        # Normalize values to expected ranges
+        ranges = self.config['raw_data_schema']['value_ranges']
+        
+        for col, range_info in ranges.items():
+            if col in df.columns:
+                # Convert to specified units if needed
+                df[col] = self._convert_to_standard_units(df[col], col, range_info)
+        
+        return df
+    
+    def _convert_to_standard_units(self, series: pd.Series, column: str, range_info: Dict) -> pd.Series:
+        """Convert data to standard units."""
+        # This is a simplified implementation
+        # In practice, you would implement specific conversion logic
+        return series
+    
+    def _add_cycle_numbering(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Add cycle numbering based on current direction changes."""
+        if 'current_a' in df.columns:
+            # Detect charge/discharge cycles based on current sign changes
+            df['cycle_number'] = 1  # Simplified: assign all data to cycle 1
+        else:
+            df['cycle_number'] = 1
+        
+        return df
+    
+    def _classify_phases(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Classify data phases (charge/discharge/rest)."""
+        if 'current_a' in df.columns:
+            # Simplified classification
+            df['phase_type'] = 'unknown'
+            
+            # Positive current = charging
+            charge_mask = df['current_a'] > 0.1
+            df.loc[charge_mask, 'phase_type'] = 'charge'
+            
+            # Negative current = discharging
+            discharge_mask = df['current_a'] < -0.1
+            df.loc[discharge_mask, 'phase_type'] = 'discharge'
+            
+            # Near zero current = rest
+            rest_mask = (df['current_a'] >= -0.1) & (df['current_a'] <= 0.1)
+            df.loc[rest_mask, 'phase_type'] = 'rest'
+        else:
+            df['phase_type'] = 'unknown'
+        
+        return df
+    
+    def _attach_metadata(self, df: pd.DataFrame, metadata: Dict[str, Any]) -> pd.DataFrame:
+        """Attach metadata columns to the DataFrame."""
+        for key, value in metadata.items():
+            df[key] = value
+        
+        return df
+    
+    def _save_standardized_data(self, df: pd.DataFrame, output_dir: str, metadata: Dict[str, Any]) -> str:
+        """Save standardized data to parquet format."""
+        # Create output directory
+        output_path = Path(output_dir)
+        output_path.mkdir(parents=True, exist_ok=True)
+        
+        # Generate output filename
+        file_name = metadata['file_source'].replace('.xlsx', '_standardized.parquet')
+        output_file = output_path / file_name
+        
+        # Save to parquet
+        df.to_parquet(output_file, index=False, compression='snappy')
+        
+        return str(output_file)
+    
+    def get_processing_stats(self) -> Dict[str, Any]:
+        """Get processing statistics."""
+        return self.processing_stats.copy()
+
+
+def main():
+    """Main function for testing the standardization module."""
+    # Example usage
+    standardizer = DataStandardizer()
+    
+    # Test with a sample file
+    test_file = "../DATA/CS2_35/CS2_35_1_10_11.xlsx"
+    if Path(test_file).exists():
+        result = standardizer.standardize_excel_file(test_file)
+        print(f"Standardization result: {result}")
+        print(f"Processing stats: {standardizer.get_processing_stats()}")
+    else:
+        print(f"Test file not found: {test_file}")
+
+
+if __name__ == "__main__":
+    main()

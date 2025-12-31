@@ -1,0 +1,259 @@
+{
+  "extraction_metadata": {
+    "extraction_timestamp": "2025-12-29T18:18:48.858456",
+    "source_directory": "/home/sanket/Make_My_route/DATA/CS2_35",
+    "output_directory": "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce",
+    "files_processed": [],
+    "total_features_extracted": 0,
+    "extraction_summary": {}
+  },
+  "extraction_summary": {
+    "files_discovered": 25,
+    "files_processed": 25,
+    "total_csv_files_created": 65,
+    "total_features_extracted": 1225,
+    "extraction_details": {
+      "CS2_35_10_15_10.xlsx": {
+        "csv_files_created": 2,
+        "csv_file_paths": [
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_10_15_10_Info.csv",
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_10_15_10_Channel_1-008.csv"
+        ],
+        "metadata_file": "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_10_15_10_extraction_metadata.json",
+        "status": "success"
+      },
+      "CS2_35_10_22_10.xlsx": {
+        "csv_files_created": 2,
+        "csv_file_paths": [
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_10_22_10_Info.csv",
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_10_22_10_Channel_1-008.csv"
+        ],
+        "metadata_file": "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_10_22_10_extraction_metadata.json",
+        "status": "success"
+      },
+      "CS2_35_10_29_10.xlsx": {
+        "csv_files_created": 3,
+        "csv_file_paths": [
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_10_29_10_Info.csv",
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_10_29_10_Channel_1-008.csv",
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_10_29_10_Statistics_1-008.csv"
+        ],
+        "metadata_file": "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_10_29_10_extraction_metadata.json",
+        "status": "success"
+      },
+      "CS2_35_11_01_10.xlsx": {
+        "csv_files_created": 3,
+        "csv_file_paths": [
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_11_01_10_Info.csv",
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_11_01_10_Channel_1-008.csv",
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_11_01_10_Statistics_1-008.csv"
+        ],
+        "metadata_file": "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_11_01_10_extraction_metadata.json",
+        "status": "success"
+      },
+      "CS2_35_11_08_10.xlsx": {
+        "csv_files_created": 3,
+        "csv_file_paths": [
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_11_08_10_Info.csv",
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_11_08_10_Channel_1-008.csv",
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_11_08_10_Statistics_1-008.csv"
+        ],
+        "metadata_file": "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_11_08_10_extraction_metadata.json",
+        "status": "success"
+      },
+      "CS2_35_11_23_10.xlsx": {
+        "csv_files_created": 3,
+        "csv_file_paths": [
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_11_23_10_Info.csv",
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_11_23_10_Channel_1-008.csv",
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_11_23_10_Statistics_1-008.csv"
+        ],
+        "metadata_file": "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_11_23_10_extraction_metadata.json",
+        "status": "success"
+      },
+      "CS2_35_11_24_10.xlsx": {
+        "csv_files_created": 3,
+        "csv_file_paths": [
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_11_24_10_Info.csv",
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_11_24_10_Channel_1-008.csv",
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_11_24_10_Statistics_1-008.csv"
+        ],
+        "metadata_file": "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_11_24_10_extraction_metadata.json",
+        "status": "success"
+      },
+      "CS2_35_12_06_10.xlsx": {
+        "csv_files_created": 3,
+        "csv_file_paths": [
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_12_06_10_Info.csv",
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_12_06_10_Channel_1-008.csv",
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_12_06_10_Statistics_1-008.csv"
+        ],
+        "metadata_file": "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_12_06_10_extraction_metadata.json",
+        "status": "success"
+      },
+      "CS2_35_12_13_10.xlsx": {
+        "csv_files_created": 3,
+        "csv_file_paths": [
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_12_13_10_Info.csv",
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_12_13_10_Channel_1-008.csv",
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_12_13_10_Statistics_1-008.csv"
+        ],
+        "metadata_file": "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_12_13_10_extraction_metadata.json",
+        "status": "success"
+      },
+      "CS2_35_12_20_10.xlsx": {
+        "csv_files_created": 3,
+        "csv_file_paths": [
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_12_20_10_Info.csv",
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_12_20_10_Channel_1-008.csv",
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_12_20_10_Statistics_1-008.csv"
+        ],
+        "metadata_file": "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_12_20_10_extraction_metadata.json",
+        "status": "success"
+      },
+      "CS2_35_12_23_10.xlsx": {
+        "csv_files_created": 3,
+        "csv_file_paths": [
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_12_23_10_Info.csv",
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_12_23_10_Channel_1-008.csv",
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_12_23_10_Statistics_1-008.csv"
+        ],
+        "metadata_file": "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_12_23_10_extraction_metadata.json",
+        "status": "success"
+      },
+      "CS2_35_1_10_11.xlsx": {
+        "csv_files_created": 3,
+        "csv_file_paths": [
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_1_10_11_Info.csv",
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_1_10_11_Channel_1-008.csv",
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_1_10_11_Statistics_1-008.csv"
+        ],
+        "metadata_file": "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_1_10_11_extraction_metadata.json",
+        "status": "success"
+      },
+      "CS2_35_1_18_11.xlsx": {
+        "csv_files_created": 3,
+        "csv_file_paths": [
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_1_18_11_Info.csv",
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_1_18_11_Channel_1-008.csv",
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_1_18_11_Statistics_1-008.csv"
+        ],
+        "metadata_file": "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_1_18_11_extraction_metadata.json",
+        "status": "success"
+      },
+      "CS2_35_1_24_11.xlsx": {
+        "csv_files_created": 3,
+        "csv_file_paths": [
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_1_24_11_Info.csv",
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_1_24_11_Channel_1-008.csv",
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_1_24_11_Statistics_1-008.csv"
+        ],
+        "metadata_file": "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_1_24_11_extraction_metadata.json",
+        "status": "success"
+      },
+      "CS2_35_1_28_11.xlsx": {
+        "csv_files_created": 3,
+        "csv_file_paths": [
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_1_28_11_Info.csv",
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_1_28_11_Channel_1-008.csv",
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_1_28_11_Statistics_1-008.csv"
+        ],
+        "metadata_file": "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_1_28_11_extraction_metadata.json",
+        "status": "success"
+      },
+      "CS2_35_2_10_11.xlsx": {
+        "csv_files_created": 3,
+        "csv_file_paths": [
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_2_10_11_Info.csv",
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_2_10_11_Channel_1-008.csv",
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_2_10_11_Statistics_1-008.csv"
+        ],
+        "metadata_file": "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_2_10_11_extraction_metadata.json",
+        "status": "success"
+      },
+      "CS2_35_2_4_11.xlsx": {
+        "csv_files_created": 3,
+        "csv_file_paths": [
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_2_4_11_Info.csv",
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_2_4_11_Channel_1-008.csv",
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_2_4_11_Statistics_1-008.csv"
+        ],
+        "metadata_file": "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_2_4_11_extraction_metadata.json",
+        "status": "success"
+      },
+      "CS2_35_8_17_10.xlsx": {
+        "csv_files_created": 2,
+        "csv_file_paths": [
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_8_17_10_Info.csv",
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_8_17_10_Channel_1-008.csv"
+        ],
+        "metadata_file": "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_8_17_10_extraction_metadata.json",
+        "status": "success"
+      },
+      "CS2_35_8_18_10.xlsx": {
+        "csv_files_created": 2,
+        "csv_file_paths": [
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_8_18_10_Info.csv",
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_8_18_10_Channel_1-008.csv"
+        ],
+        "metadata_file": "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_8_18_10_extraction_metadata.json",
+        "status": "success"
+      },
+      "CS2_35_8_19_10.xlsx": {
+        "csv_files_created": 2,
+        "csv_file_paths": [
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_8_19_10_Info.csv",
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_8_19_10_Channel_1-008.csv"
+        ],
+        "metadata_file": "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_8_19_10_extraction_metadata.json",
+        "status": "success"
+      },
+      "CS2_35_8_30_10.xlsx": {
+        "csv_files_created": 2,
+        "csv_file_paths": [
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_8_30_10_Info.csv",
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_8_30_10_Channel_1-008.csv"
+        ],
+        "metadata_file": "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_8_30_10_extraction_metadata.json",
+        "status": "success"
+      },
+      "CS2_35_9_21_10.xlsx": {
+        "csv_files_created": 2,
+        "csv_file_paths": [
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_9_21_10_Info.csv",
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_9_21_10_Channel_1-008.csv"
+        ],
+        "metadata_file": "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_9_21_10_extraction_metadata.json",
+        "status": "success"
+      },
+      "CS2_35_9_30_10.xlsx": {
+        "csv_files_created": 2,
+        "csv_file_paths": [
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_9_30_10_Info.csv",
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_9_30_10_Channel_1-008.csv"
+        ],
+        "metadata_file": "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_9_30_10_extraction_metadata.json",
+        "status": "success"
+      },
+      "CS2_35_9_7_10.xlsx": {
+        "csv_files_created": 2,
+        "csv_file_paths": [
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_9_7_10_Info.csv",
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_9_7_10_Channel_1-008.csv"
+        ],
+        "metadata_file": "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_9_7_10_extraction_metadata.json",
+        "status": "success"
+      },
+      "CS2_35_9_8_10.xlsx": {
+        "csv_files_created": 2,
+        "csv_file_paths": [
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_9_8_10_Info.csv",
+          "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_9_8_10_Channel_1-008.csv"
+        ],
+        "metadata_file": "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_9_8_10_extraction_metadata.json",
+        "status": "success"
+      }
+    }
+  },
+  "report_generated": "2025-12-29T18:19:32.403379"
+}

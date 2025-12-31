@@ -1,0 +1,565 @@
+# Battery Analytics Lab - Master Data Schema
+# Single Source of Truth for All Data Definitions
+# 
+# Purpose: Prevent schema drift and ensure consistent data interpretation
+# Dataset: CS2_35 Battery Testing Data
+# Version: 2.0 - Complete CS2_35 Field Coverage
+# Created: 2025-12-29
+# 
+# This schema defines the complete structure, meaning, and constraints
+# for all data columns used in the battery analytics pipeline.
+
+schema_info:
+  schema_id: "battery_analytics_master_schema"
+  version: "2.0"
+  dataset_name: "CS2_35"
+  description: "Complete data schema for CS2_35 battery testing dataset"
+  created_date: "2025-12-29"
+  last_updated: "2025-12-29"
+  owner: "Battery Analytics Lab Team"
+  purpose: "Single source of truth for data definitions and constraints"
+  coverage_note: "This schema includes ALL fields found in CS2_35 dataset"
+
+# =============================================================================
+# COMPLETE CS2_35 DATA COLUMNS
+# =============================================================================
+
+columns:
+  # -----------------------------------------------------------------------------
+  # IDENTIFICATION AND INDEXING COLUMNS
+  # -----------------------------------------------------------------------------
+  
+  Data_Point:
+    physical_meaning: "Sequential data point identifier"
+    description: "Unique identifier for each measurement point in time series"
+    unit: "count"
+    data_type: "integer"
+    nullable: false
+    value_range:
+      min: 1
+      max: 1000000
+      description: "Sequential numbering of data points"
+    validation_rules:
+      - "Must be positive integer"
+      - "Should be monotonically increasing"
+      - "No gaps in sequence indicate continuous measurement"
+    quality_indicators:
+      completeness_threshold: 1.0
+      sequence_check: true
+    example_values: [1, 2, 3, 4, 5]
+    notes: "Primary key for time series data points"
+
+  Test_Time:
+    physical_meaning: "Elapsed time since test start"
+    description: "Time elapsed from the beginning of the test sequence"
+    unit: "seconds"
+    data_type: "float64"
+    nullable: false
+    value_range:
+      min: 0.0
+      max: 86400.0  # Maximum 24 hours
+      description: "Time in seconds from test start"
+    validation_rules:
+      - "Must be non-negative"
+      - "Should be monotonically increasing"
+      - "Gaps > 10 seconds indicate data acquisition issues"
+    quality_indicators:
+      completeness_threshold: 0.95
+      anomaly_detection: true
+    example_values: [0.0, 1.0, 2.5, 3600.0]
+    notes: "Primary time reference for all other measurements"
+
+  Date_Time:
+    physical_meaning: "Absolute timestamp of measurement"
+    description: "Calendar date and time when the measurement was taken"
+    unit: "datetime"
+    data_type: "datetime64"
+    nullable: false
+    value_range:
+      min: "2020-01-01"
+      max: "2030-12-31"
+      description: "Valid date range for test data"
+    validation_rules:
+      - "Must be valid datetime format"
+      - "Should be within expected test period"
+      - "Must be consistent with Test_Time progression"
+    quality_indicators:
+      completeness_threshold: 0.95
+      format_validation: true
+    example_values: ["2025-01-10 10:30:00", "2025-01-10 10:30:01"]
+    notes: "Absolute time reference for data correlation"
+
+  Step_Time:
+    physical_meaning: "Elapsed time within current test step"
+    description: "Time elapsed since the start of the current test step or phase"
+    unit: "seconds"
+    data_type: "float64"
+    nullable: false
+    value_range:
+      min: 0.0
+      max: 7200.0  # Maximum 2 hours per step
+      description: "Time within current test step"
+    validation_rules:
+      - "Must be non-negative"
+      - "Resets or continues appropriately with step changes"
+      - "Should correlate with test protocol timing"
+    quality_indicators:
+      completeness_threshold: 0.90
+      step_consistency: true
+    example_values: [0.0, 30.0, 60.0, 120.0]
+    notes: "Used to analyze individual test step behaviors"
+
+  Step_Index:
+    physical_meaning: "Sequential step identifier"
+    description: "Index number of the current test step within the test protocol"
+    unit: "count"
+    data_type: "integer"
+    nullable: false
+    value_range:
+      min: 1
+      max: 100
+      description: "Step sequence number"
+    validation_rules:
+      - "Must be positive integer"
+      - "Changes indicate phase transitions"
+      - "Should follow logical test protocol sequence"
+    quality_indicators:
+      completeness_threshold: 1.0
+      logical_sequence: true
+    example_values: [1, 2, 3, 4, 5]
+    notes: "Identifies different phases of test protocol"
+
+  Cycle_Index:
+    physical_meaning: "Cycle number for cycling tests"
+    description: "Cycle count for repeated charge/discharge cycles"
+    unit: "count"
+    data_type: "integer"
+    nullable: true  # May be null for non-cycling tests
+    value_range:
+      min: 1
+      max: 10000
+      description: "Cycle sequence number"
+    validation_rules:
+      - "Must be positive integer when present"
+      - "Increments with each complete cycle"
+      - "Used for cycle aging studies"
+    quality_indicators:
+      completeness_threshold: 0.80
+      cycle_progression: true
+    example_values: [1, 2, 3, 10, 50, 100]
+    notes: "Critical for capacity fade and aging analysis"
+
+  # -----------------------------------------------------------------------------
+  # ELECTRICAL MEASUREMENTS
+  # -----------------------------------------------------------------------------
+  
+  Current:
+    physical_meaning: "Current flowing through the battery cell"
+    description: "Instantaneous current - positive for discharge, negative for charge"
+    unit: "amperes"
+    data_type: "float64"
+    nullable: false
+    value_range:
+      min: -5.0
+      max: 5.0
+      description: "Expected current range for test protocols"
+    validation_rules:
+      - "Positive values indicate discharge (power delivery)"
+      - "Negative values indicate charge (power absorption)"
+      - "Zero current indicates rest period"
+      - "Sudden current spikes may indicate measurement errors"
+    quality_indicators:
+      completeness_threshold: 0.95
+      spike_detection: true
+      continuity_check: true
+    example_values: [-1.0, 0.0, 2.5, -0.5]
+    interpretation:
+      positive_discharge: "Battery providing power to load"
+      negative_charge: "Battery being charged by external source"
+      near_zero: "Rest or standby condition"
+    safety_limits:
+      maximum_discharge: 5.0
+      maximum_charge: -5.0
+    notes: "Key parameter for power analysis and energy calculations"
+
+  Voltage:
+    physical_meaning: "Terminal voltage of the battery cell"
+    description: "Electrical potential difference across battery terminals"
+    unit: "volts"
+    data_type: "float64"
+    nullable: false
+    value_range:
+      min: 2.5
+      max: 4.5
+      description: "Valid operating voltage range for Li-ion cells"
+    validation_rules:
+      - "Must be within safe operating limits"
+      - "Values < 2.0V indicate deep discharge (potential damage)"
+      - "Values > 4.5V indicate overcharge (safety risk)"
+      - "Rapid voltage drops may indicate internal shorts"
+    quality_indicators:
+      completeness_threshold: 0.98
+      stability_check: true
+      noise_threshold: 0.01  # V
+    example_values: [3.7, 4.2, 3.6, 3.8]
+    safety_limits:
+      minimum_safe: 2.5
+      maximum_safe: 4.5
+      critical_low: 2.0
+      critical_high: 5.0
+    notes: "Critical parameter for state estimation and safety monitoring"
+
+  # -----------------------------------------------------------------------------
+  # CAPACITY AND ENERGY MEASUREMENTS
+  # -----------------------------------------------------------------------------
+  
+  Charge_Capacity:
+    physical_meaning: "Cumulative charge capacity during charging"
+    description: "Total charge capacity that has flowed into the cell during charging phases"
+    unit: "ampere-hours"
+    data_type: "float64"
+    nullable: true  # Only accumulates during charge phases
+    value_range:
+      min: 0.0
+      max: 5.0
+      description: "Charge capacity range for typical Li-ion cells"
+    validation_rules:
+      - "Must be non-negative"
+      - "Only accumulates during charge phases"
+      - "Resets or continues based on test protocol"
+    quality_indicators:
+      completeness_threshold: 0.85
+      charge_specific: true
+    example_values: [0.0, 0.1, 0.5, 1.0, 2.8]
+    notes: "Used for charge efficiency and capacity analysis"
+
+  Discharge_Capacity:
+    physical_meaning: "Cumulative discharge capacity"
+    description: "Total charge capacity that has flowed out of the cell during discharge phases"
+    unit: "ampere-hours"
+    data_type: "float64"
+    nullable: true  # Only accumulates during discharge phases
+    value_range:
+      min: 0.0
+      max: 5.0
+      description: "Discharge capacity range for typical Li-ion cells"
+    validation_rules:
+      - "Must be non-negative"
+      - "Only accumulates during discharge phases"
+      - "Key metric for battery capacity assessment"
+    quality_indicators:
+      completeness_threshold: 0.85
+      discharge_specific: true
+    example_values: [0.0, 0.1, 0.5, 1.0, 2.8]
+    notes: "Primary metric for battery capacity and aging analysis"
+
+  Charge_Energy:
+    physical_meaning: "Cumulative energy during charging"
+    description: "Total electrical energy delivered to the cell during charging"
+    unit: "watt-hours"
+    data_type: "float64"
+    nullable: true  # Only accumulates during charge phases
+    value_range:
+      min: 0.0
+      max: 20.0
+      description: "Charge energy range for typical Li-ion cells"
+    validation_rules:
+      - "Must be non-negative"
+      - "Should correlate with Charge_Capacity × Voltage"
+      - "Energy efficiency calculations use this metric"
+    quality_indicators:
+      completeness_threshold: 0.85
+      energy_consistency: true
+    example_values: [0.0, 0.37, 1.85, 3.7, 10.36]
+    notes: "Essential for energy efficiency and thermal analysis"
+
+  Discharge_Energy:
+    physical_meaning: "Cumulative energy during discharge"
+    description: "Total electrical energy delivered by the cell during discharge"
+    unit: "watt-hours"
+    data_type: "float64"
+    nullable: true  # Only accumulates during discharge phases
+    value_range:
+      min: 0.0
+      max: 20.0
+      description: "Discharge energy range for typical Li-ion cells"
+    validation_rules:
+      - "Must be non-negative"
+      - "Should correlate with Discharge_Capacity × Voltage"
+      - "Primary metric for available energy assessment"
+    quality_indicators:
+      completeness_threshold: 0.85
+      energy_consistency: true
+    example_values: [0.0, 0.37, 1.85, 3.7, 10.36]
+    notes: "Critical for available energy and performance analysis"
+
+  # -----------------------------------------------------------------------------
+  # DERIVED AND CALCULATED MEASUREMENTS
+  # -----------------------------------------------------------------------------
+  
+  dV_dt:
+    physical_meaning: "Rate of voltage change"
+    description: "Instantaneous rate of change of voltage with respect to time"
+    unit: "volts_per_second"
+    data_type: "float64"
+    nullable: true  # Calculated from voltage measurements
+    value_range:
+      min: -1.0
+      max: 1.0
+      description: "Expected voltage change rates"
+    validation_rules:
+      - "Large values may indicate measurement noise"
+      - "Used for voltage stability analysis"
+      - "Important for impedance calculations"
+    quality_indicators:
+      completeness_threshold: 0.80
+      derivative_validation: true
+    example_values: [-0.001, 0.0, 0.002, -0.0005]
+    notes: "Used for impedance spectroscopy and stability analysis"
+
+  Internal_Resistance:
+    physical_meaning: "Internal resistance of the battery cell"
+    description: "Calculated or measured internal resistance of the cell"
+    unit: "ohms"
+    data_type: "float64"
+    nullable: true  # May not be calculated for all data points
+    value_range:
+      min: 0.001
+      max: 1.0
+      description: "Internal resistance range for Li-ion cells"
+    validation_rules:
+      - "Must be positive"
+      - "Increases with aging and temperature"
+      - "Used for power capability assessment"
+    quality_indicators:
+      completeness_threshold: 0.70
+      resistance_trend: true
+    example_values: [0.05, 0.08, 0.12, 0.15]
+    notes: "Critical for power performance and aging analysis"
+
+  # -----------------------------------------------------------------------------
+  # AC IMPEDANCE MEASUREMENTS
+  # -----------------------------------------------------------------------------
+  
+  Is_FC_Data:
+    physical_meaning: "Flag indicating fractional capacity data"
+    description: "Boolean flag indicating if this data point represents fractional capacity measurement"
+    unit: "boolean"
+    data_type: "boolean"
+    nullable: false
+    value_range:
+      valid_values: [true, false]
+      description: "True for fractional capacity measurements, False otherwise"
+    validation_rules:
+      - "Must be boolean (True/False)"
+      - "Used to identify special test conditions"
+      - "Important for capacity analysis protocols"
+    quality_indicators:
+      completeness_threshold: 1.0
+      boolean_validation: true
+    example_values: [false, true, false, false]
+    notes: "Identifies special measurement protocols for capacity analysis"
+
+  AC_Impedance:
+    physical_meaning: "AC impedance magnitude"
+    description: "Magnitude of AC impedance at measurement frequency"
+    unit: "ohms"
+    data_type: "float64"
+    nullable: true  # Only for AC impedance measurements
+    value_range:
+      min: 0.001
+      max: 10.0
+      description: "AC impedance range"
+    validation_rules:
+      - "Must be positive"
+      - "Frequency-dependent measurement"
+      - "Used for electrochemical analysis"
+    quality_indicators:
+      completeness_threshold: 0.60
+      impedance_validation: true
+    example_values: [0.15, 0.18, 0.22, 0.25]
+    notes: "Essential for electrochemical characterization"
+
+  ACI_Phase_Angle:
+    physical_meaning: "Phase angle of AC impedance"
+    description: "Phase angle between voltage and current for AC impedance measurement"
+    unit: "degrees"
+    data_type: "float64"
+    nullable: true  # Only for AC impedance measurements
+    value_range:
+      min: -180.0
+      max: 180.0
+      description: "Phase angle in degrees"
+    validation_rules:
+      - "Should be within -180 to +180 degrees"
+      - "Correlates with AC_Impedance measurements"
+      - "Used for impedance analysis and modeling"
+    quality_indicators:
+      completeness_threshold: 0.60
+      phase_validation: true
+    example_values: [-45.0, -30.0, 0.0, 30.0, 45.0]
+    notes: "Critical for impedance spectroscopy and equivalent circuit modeling"
+
+  # -----------------------------------------------------------------------------
+  # LEGACY COMPATIBILITY COLUMNS (for backward compatibility)
+  # -----------------------------------------------------------------------------
+  
+  Time:
+    physical_meaning: "Legacy time column (alias for Test_Time)"
+    description: "Kept for backward compatibility - use Test_Time instead"
+    unit: "seconds"
+    data_type: "float64"
+    nullable: false
+    value_range:
+      min: 0.0
+      max: 86400.0
+    validation_rules:
+      - "Must match Test_Time values"
+      - "Deprecated - use Test_Time for new analyses"
+    notes: "Legacy column maintained for compatibility"
+
+  Temperature:
+    physical_meaning: "Cell temperature during testing"
+    description: "Temperature of the battery cell during operation"
+    unit: "celsius"
+    data_type: "float64"
+    nullable: true
+    value_range:
+      min: 0.0
+      max: 60.0
+    validation_rules:
+      - "Values below 0°C indicate potential freezing conditions"
+      - "Values above 50°C indicate thermal stress"
+    notes: "May not be present in all CS2_35 files"
+
+  Capacity:
+    physical_meaning: "Legacy capacity column"
+    description: "Legacy capacity column - use Charge_Capacity or Discharge_Capacity"
+    unit: "ampere-hours"
+    data_type: "float64"
+    nullable: true
+    notes: "Legacy column maintained for compatibility"
+
+# =============================================================================
+# SCHEMA VALIDATION RULES
+# =============================================================================
+
+validation_rules:
+  cross_column_validation:
+    - "Test_Time should be monotonically increasing"
+    - "Step_Time should reset or continue appropriately with Step_Index changes"
+    - "Voltage × Current should match calculated Power (within tolerance)"
+    - "Charge_Energy should correlate with Charge_Capacity × Voltage"
+    - "Discharge_Energy should correlate with Discharge_Capacity × Voltage"
+    - "Cycle_Index should increment logically with cycle progression"
+    - "AC_Impedance and ACI_Phase_Angle should be present together"
+    - "Is_FC_Data flag should correspond to special test conditions"
+
+  data_quality_rules:
+    - "No negative time values"
+    - "Voltage within safe operating range"
+    - "Current magnitude within test equipment limits"
+    - "Capacity values should be non-negative"
+    - "Energy calculations should be consistent"
+    - "Step progression should follow logical sequence"
+    - "AC impedance measurements should be internally consistent"
+
+  safety_rules:
+    - "Flag any voltage below 2.0V (deep discharge risk)"
+    - "Flag any voltage above 4.5V (overcharge risk)"
+    - "Flag any temperature above 50°C (thermal stress)"
+    - "Flag sudden current spikes (>10A in 1 second)"
+    - "Flag unreasonable capacity or energy values"
+    - "Flag inconsistent AC impedance measurements"
+
+# =============================================================================
+# DATA LINEAGE AND PROVENANCE
+# =============================================================================
+
+data_lineage:
+  source_system: "CS2_35 Battery Test Equipment"
+  data_acquisition_rate: "1 Hz (typical)"
+  original_format: "Excel files (.xlsx)"
+  sheet_structure: "Multiple sheets with time-series and metadata"
+  measurement_capabilities:
+    - "DC voltage and current measurement"
+    - "Capacity and energy integration"
+    - "AC impedance spectroscopy"
+    - "Temperature monitoring"
+    - "Multi-step test protocols"
+    - "Cycle testing capabilities"
+  calibration_schedule: "Annual equipment calibration"
+  quality_assurance: "Automated validation with manual review"
+  version_control: "Schema version tracked in metadata"
+
+# =============================================================================
+# COMPATIBILITY AND MIGRATION
+# =============================================================================
+
+compatibility:
+  backward_compatibility:
+    - "Legacy columns maintained for compatibility"
+    - "New columns may be added without breaking existing code"
+    - "Data type changes require migration strategy"
+    - "Value range expansions require justification"
+  
+  migration_notes:
+    - "Legacy columns (Time, Temperature, Capacity) are deprecated"
+    - "Use Test_Time instead of Time"
+    - "Use Charge_Capacity/Discharge_Capacity instead of Capacity"
+    - "Temperature may not be present in all files"
+
+# =============================================================================
+# USAGE GUIDELINES
+# =============================================================================
+
+usage_guidelines:
+  for_data_engineers:
+    - "Always validate against this complete schema"
+    - "Report schema drift immediately"
+    - "Handle nullable fields appropriately"
+    - "Maintain version compatibility"
+    - "Use all available columns for comprehensive analysis"
+
+  for_data_scientists:
+    - "Use this schema for feature engineering"
+    - "Respect nullability constraints"
+    - "Apply validation rules before analysis"
+    - "Leverage all measurement types for rich analysis"
+    - "Use AC impedance data for electrochemical modeling"
+
+  for_analysts:
+    - "Reference physical meanings for interpretation"
+    - "Check units before calculations"
+    - "Use value ranges for outlier detection"
+    - "Utilize the complete measurement set for insights"
+    - "Understand the relationship between measurement types"
+
+# =============================================================================
+# CHANGE MANAGEMENT
+# =============================================================================
+
+change_management:
+  change_process:
+    - "Schema changes require team approval"
+    - "Impact assessment must be documented"
+    - "Migration strategy required for breaking changes"
+    - "Version must be incremented for all changes"
+    - "Backward compatibility must be maintained where possible"
+  
+  approval_required_for:
+    - "Column additions or removals"
+    - "Data type changes"
+    - "Value range modifications"
+    - "Nullability changes"
+    - "Unit changes"
+    - "Physical meaning clarifications"
+
+---
+# End of Complete CS2_35 Schema Definition
+# This document serves as the single source of truth for all data definitions
+# in the Battery Analytics Lab project.
+# 
+# Version 2.0 includes ALL fields found in CS2_35 dataset
+# Last Updated: 2025-12-29
+# Next Review: 2026-01-29
