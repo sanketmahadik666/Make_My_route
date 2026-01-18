@@ -1,0 +1,6 @@
+2026-01-19 00:27:56,103 - data_standardizer - INFO - Starting standardization of file: /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_1_10_11_Channel_1-008.csv
+2026-01-19 00:27:56,127 - data_standardizer - INFO - Read 12695 rows from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_1_10_11_Channel_1-008.csv
+2026-01-19 00:27:56,131 - data_standardizer - ERROR - Error standardizing file /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_1_10_11_Channel_1-008.csv: Length of values (17) does not match length of index (12695)
+2026-01-19 00:28:19,849 - data_standardizer - INFO - Starting standardization of file: /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_1_10_11_Channel_1-008.csv
+2026-01-19 00:28:19,870 - data_standardizer - INFO - Read 12695 rows from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_1_10_11_Channel_1-008.csv
+2026-01-19 00:28:19,925 - data_standardizer - INFO - Successfully standardized 12695 records from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_1_10_11_Channel_1-008.csv

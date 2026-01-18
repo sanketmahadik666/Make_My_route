@@ -18,6 +18,13 @@ from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Tuple, Optional, Any
 import warnings
+import sys
+import os
+
+# Add project root to path for imports
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
+
+from src.ingestion.schema_definition import SchemaDefinition
 
 # Suppress warnings for cleaner output
 warnings.filterwarnings('ignore')
@@ -27,7 +34,7 @@ class DataStandardizer:
     Main class for standardizing battery data from raw format to standardized format.
     """
     
-    def __init__(self, config_path: str = "battery-analytics-lab/config/feature_schema.yaml"):
+    def __init__(self, config_path: str = "config/feature_schema.yaml"):
         """
         Initialize the DataStandardizer with configuration.
         
@@ -43,6 +50,7 @@ class DataStandardizer:
             'standardization_errors': 0,
             'warnings_issued': 0
         }
+        self.schema = SchemaDefinition()
     
     def _load_config(self) -> Dict[str, Any]:
         """Load configuration from YAML file."""
@@ -85,14 +93,14 @@ class DataStandardizer:
         
         return logger
     
-    def standardize_excel_file(self, 
+    def standardize_file(self, 
                              file_path: str, 
                              output_dir: str = "battery-analytics-lab/data/standardized/") -> Dict[str, Any]:
         """
-        Standardize a single Excel file containing battery data.
+        Standardize a file (Excel or CSV) containing battery data.
         
         Args:
-            file_path: Path to the source Excel file
+            file_path: Path to the source file
             output_dir: Directory to save standardized data
             
         Returns:
@@ -101,8 +109,15 @@ class DataStandardizer:
         try:
             self.logger.info(f"Starting standardization of file: {file_path}")
             
-            # Read Excel file
-            df = self._read_excel_file(file_path)
+            file_path_obj = Path(file_path)
+            
+            # Read file based on extension
+            if file_path_obj.suffix.lower() == '.csv':
+                df = self._read_csv_file(file_path)
+            elif file_path_obj.suffix.lower() == '.xlsx':
+                df = self._read_excel_file(file_path)
+            else:
+                raise ValueError(f"Unsupported file format: {file_path_obj.suffix}")
             
             # Extract metadata
             metadata = self._extract_metadata(file_path, df)
@@ -141,6 +156,17 @@ class DataStandardizer:
                 'processing_timestamp': datetime.now().isoformat()
             }
     
+    def _read_csv_file(self, file_path: str) -> pd.DataFrame:
+        """Read CSV file and return DataFrame."""
+        try:
+            # Read CSV with pandas, assuming header is on first row
+            df = pd.read_csv(file_path)
+            self.logger.info(f"Read {len(df)} rows from {file_path}")
+            return df
+        except Exception as e:
+            self.logger.error(f"Error reading CSV file {file_path}: {str(e)}")
+            raise
+
     def _read_excel_file(self, file_path: str) -> pd.DataFrame:
         """Read Excel file and return DataFrame."""
         try:
@@ -175,7 +201,7 @@ class DataStandardizer:
             'cell_id': cell_id,
             'test_date': test_date,
             'file_source': file_name,
-            'standardization_version': self.config['schema_version'],
+            'standardization_version': self.config.get('schema_version', '1.0'),
             'processing_timestamp': datetime.now().isoformat(),
             'original_columns': list(df.columns),
             'original_row_count': len(df),
@@ -190,13 +216,13 @@ class DataStandardizer:
         parts = file_name.replace('.xlsx', '').split('_')
         if len(parts) >= 3:
             return f"{parts[0]}_{parts[1]}"
-        return file_name.replace('.xlsx', '')
+        return file_name.replace('.xlsx', '').replace('.csv', '')
     
     def _extract_test_date(self, file_name: str) -> Optional[str]:
         """Extract test date from filename."""
         try:
-            # Extract date from filename format: CS2_35_MM_DD_YY.xlsx
-            parts = file_name.replace('.xlsx', '').split('_')
+            # Extract date from filename format: CS2_35_MM_DD_YY.xlsx or .csv
+            parts = file_name.replace('.xlsx', '').replace('.csv', '').split('_')
             if len(parts) >= 5:
                 month, day, year = parts[2], parts[3], parts[4]
                 # Convert 2-digit year to 4-digit
@@ -211,7 +237,7 @@ class DataStandardizer:
         """Calculate initial data quality score."""
         try:
             # Check for required columns
-            required_cols = self.config['raw_data_schema']['required_columns']
+            required_cols = self.config.get('raw_data_schema', {}).get('required_columns', {})
             available_cols = list(df.columns)
             
             # Count matching columns (case-insensitive)
@@ -255,11 +281,19 @@ class DataStandardizer:
         return standardized_df
     
     def _create_column_mapping(self, columns: List[str]) -> Dict[str, str]:
-        """Create mapping from original to standardized column names."""
+        """Create mapping from original to standardized column names using SchemaDefinition."""
         mapping = {}
+        schema_mapping = self.schema.get_column_mapping()
         
         for col in columns:
             col_lower = col.lower()
+            
+            # Check mappings from schema definition first
+            if col_lower in schema_mapping:
+                mapping[col] = schema_mapping[col_lower]
+                continue
+                
+            # Fallback to existing manual rules if not in schema
             
             # Time/timestamp columns
             if any(keyword in col_lower for keyword in ['time', 'timestamp', 'date']):
@@ -311,12 +345,13 @@ class DataStandardizer:
             df['timestamp'] = df['timestamp'] - df['timestamp'].min()
         
         # Normalize values to expected ranges
-        ranges = self.config['raw_data_schema']['value_ranges']
-        
-        for col, range_info in ranges.items():
-            if col in df.columns:
-                # Convert to specified units if needed
-                df[col] = self._convert_to_standard_units(df[col], col, range_info)
+        if 'raw_data_schema' in self.config and 'value_ranges' in self.config['raw_data_schema']:
+            ranges = self.config['raw_data_schema']['value_ranges']
+            
+            for col, range_info in ranges.items():
+                if col in df.columns:
+                    # Convert to specified units if needed
+                    df[col] = self._convert_to_standard_units(df[col], col, range_info)
         
         return df
     
@@ -361,7 +396,11 @@ class DataStandardizer:
     def _attach_metadata(self, df: pd.DataFrame, metadata: Dict[str, Any]) -> pd.DataFrame:
         """Attach metadata columns to the DataFrame."""
         for key, value in metadata.items():
-            df[key] = value
+            # Convert list/dict to string to avoid length mismatch errors
+            if isinstance(value, (list, dict)):
+                df[key] = str(value)
+            else:
+                df[key] = value
         
         return df
     
@@ -372,7 +411,7 @@ class DataStandardizer:
         output_path.mkdir(parents=True, exist_ok=True)
         
         # Generate output filename
-        file_name = metadata['file_source'].replace('.xlsx', '_standardized.parquet')
+        file_name = metadata['file_source'].replace('.xlsx', '_standardized.parquet').replace('.csv', '_standardized.parquet')
         output_file = output_path / file_name
         
         # Save to parquet
@@ -391,9 +430,9 @@ def main():
     standardizer = DataStandardizer()
     
     # Test with a sample file
-    test_file = "../DATA/CS2_35/CS2_35_1_10_11.xlsx"
+    test_file = "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_1_10_11_Channel_1-008.csv"
     if Path(test_file).exists():
-        result = standardizer.standardize_excel_file(test_file)
+        result = standardizer.standardize_file(test_file)
         print(f"Standardization result: {result}")
         print(f"Processing stats: {standardizer.get_processing_stats()}")
     else:
