@@ -89,12 +89,27 @@ class SchemaDefinition:
             # Legacy column names
             'time': 'Test_Time',  # Legacy alias
             'temperature': 'Temperature',  # May be present in some files
-            'capacity': 'Capacity'  # Legacy alias
+            'capacity': 'Capacity',  # Legacy alias
+            
+            # Unit-suffixed columns (from CSVs)
+            'test_time(s)': 'Test_Time',
+            'step_time(s)': 'Step_Time',
+            'current(a)': 'Current',
+            'voltage(v)': 'Voltage',
+            'charge_capacity(ah)': 'Charge_Capacity',
+            'discharge_capacity(ah)': 'Discharge_Capacity',
+            'charge_energy(wh)': 'Charge_Energy',
+            'discharge_energy(wh)': 'Discharge_Energy',
+            'dv/dt(v/s)': 'dV/dt',
+            'internal_resistance(ohm)': 'Internal_Resistance',
+            'ac_impedance(ohm)': 'AC_Impedance',
+            'aci_phase_angle(deg)': 'ACI_Phase_Angle'
         }
         
         # File patterns to match
         self.file_patterns = [
-            "CS2_35_*.xlsx"
+            "CS2_35_*.xlsx",
+            "CS2_35_*.csv"
         ]
         
         # Data source directory
@@ -255,7 +270,7 @@ class SchemaDefinition:
         }
         
         # Check file extension
-        if not file_path.suffix.lower() == '.xlsx':
+        if not file_path.suffix.lower() in ['.xlsx', '.csv']:
             validation_result['issues'].append(f"File extension {file_path.suffix} not supported")
             return validation_result
         

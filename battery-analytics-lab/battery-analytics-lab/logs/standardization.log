@@ -1,0 +1,5 @@
+2026-01-19 00:45:28,064 - data_standardizer - INFO - Starting standardization of file: /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_1_10_11_Channel_1-008.csv
+2026-01-19 00:45:28,088 - data_standardizer - INFO - Read 12695 rows from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_1_10_11_Channel_1-008.csv
+2026-01-19 00:45:28,088 - data_standardizer - INFO - Loaded external metadata from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_1_10_11_extraction_metadata.json
+2026-01-19 00:45:28,339 - data_standardizer - INFO - Successfully standardized 12695 records from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_1_10_11_Channel_1-008.csv
+2026-01-19 00:45:28,448 - data_standardizer - INFO - Generated metadata index at data/standardized/metadata_index.csv with 1 entries
