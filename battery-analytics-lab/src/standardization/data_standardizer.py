@@ -94,6 +94,10 @@ class DataStandardizer:
         
         return logger
     
+    def _validate_file_extension(self, file_path: str) -> bool:
+        """Check if file extension is supported."""
+        return Path(file_path).suffix.lower() in ['.xlsx', '.csv']
+
     def standardize_file(self, 
                              file_path: str, 
                              output_dir: str = "data/standardized/") -> Dict[str, Any]:
@@ -517,21 +521,66 @@ class DataStandardizer:
 
 def main():
     """Main function for testing the standardization module."""
-    # Example usage
+    import argparse
+    import glob
+    
+    parser = argparse.ArgumentParser(description='Standardize battery data files.')
+    parser.add_argument('--input', '-i', type=str, help='Input file or directory')
+    parser.add_argument('--output', '-o', type=str, default='data/standardized/', help='Output directory')
+    
+    args = parser.parse_args()
+    
     standardizer = DataStandardizer()
     
-    # Test with a sample file
-    test_file = "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_1_10_11_Channel_1-008.csv"
-    if Path(test_file).exists():
-        result = standardizer.standardize_file(test_file)
-        print(f"Standardization result: {result}")
-        print(f"Processing stats: {standardizer.get_processing_stats()}")
+    if args.input:
+        input_path = Path(args.input)
         
-        # Generate index
-        index_path = standardizer.generate_metadata_index()
-        print(f"Metadata index generated at: {index_path}")
+        if input_path.is_file():
+            # Process single file
+            if standardizer._validate_file_extension(str(input_path)):
+                result = standardizer.standardize_file(str(input_path), args.output)
+                print(f"Result: {result['status']}")
+            else:
+                print(f"Skipping {input_path}: Unsupported extension")
+                
+        elif input_path.is_dir():
+            # Process directory
+            print(f"Processing directory: {input_path}")
+            # Recursively find .csv and .xlsx files
+            files = []
+            files.extend(list(input_path.glob('**/*Channel*.csv'))) # Prioritize Channel files as per user request
+            files.extend(list(input_path.glob('**/*Channel*.xlsx')))
+            
+            print(f"Found {len(files)} potential data files.")
+            
+            for file_path in files:
+                try:
+                    print(f"Processing {file_path.name}...")
+                    standardizer.standardize_file(str(file_path), args.output)
+                except Exception as e:
+                    print(f"Failed to process {file_path.name}: {e}")
+                    
     else:
-        print(f"Test file not found: {test_file}")
+        # Default test behavior if no args provided
+        test_file = "/home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_1_10_11_Channel_1-008.csv"
+        if Path(test_file).exists():
+            print(f"Running default test on {test_file}")
+            result = standardizer.standardize_file(test_file)
+            print(f"Standardization result: {result}")
+    
+    # Generate index after processing
+    index_path = standardizer.generate_metadata_index(args.output if args.input else "data/standardized/")
+    print(f"Metadata index generated at: {index_path}")
+    print(f"Processing stats: {standardizer.get_processing_stats()}")
+
+    
+def _validate_file_extension(self, file_path: str) -> bool:
+    """Helper to check extension."""
+    return Path(file_path).suffix.lower() in ['.xlsx', '.csv']
+
+# Monkey patch or add method to class if missing, but better to just use inline check in main or add to class above.
+# Adding helper to class above main would be better, but for now using inline logic in main is safer if I can't edit class easily in this chunk.
+# Actually, I'll just put the logic in main.
 
 
 if __name__ == "__main__":

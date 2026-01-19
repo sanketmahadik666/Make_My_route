@@ -1,0 +1,109 @@
+version: 1.0
+dataset: CALCE_CS2_35
+
+required_fields:
+  - name: Data_Point
+    type: int
+    required: true
+    description: "Sequential data point index"
+
+  - name: Test_Time
+    type: float
+    required: true
+    unit: s
+    constraints:
+      min: 0.0
+    description: "Time elapsed since start of test"
+
+  - name: Date_Time
+    type: datetime
+    required: true
+    description: "Absolute timestamp of measurement"
+
+  - name: Step_Time
+    type: float
+    required: true
+    unit: s
+    description: "Time elapsed within current step"
+
+  - name: Step_Index
+    type: int
+    required: true
+    description: "Index of the current protocol step"
+
+  - name: Cycle_Index
+    type: int
+    required: true
+    description: "Cycle number"
+
+  - name: Current
+    type: float
+    required: true
+    unit: A
+    description: "Current"
+
+  - name: Voltage
+    type: float
+    required: true
+    unit: V
+    constraints:
+      min: 0.0
+      max: 5.0 # Typical Li-ion constraint
+    description: "Voltage"
+
+  - name: Charge_Capacity
+    type: float
+    required: true
+    unit: Ah
+    description: "Charge Capacity"
+
+  - name: Discharge_Capacity
+    type: float
+    required: true
+    unit: Ah
+    description: "Discharge Capacity"
+
+  - name: Charge_Energy
+    type: float
+    required: true
+    unit: Wh
+    description: "Charge Energy"
+
+  - name: Discharge_Energy
+    type: float
+    required: true
+    unit: Wh
+    description: "Discharge Energy"
+
+  - name: dV/dt
+    type: float
+    required: true
+    unit: V/s
+    description: "Differential Voltage"
+
+  - name: Internal_Resistance
+    type: float
+    required: true
+    unit: Ohm
+    description: "Internal Resistance"
+
+  - name: Is_FC_Data
+    type: int
+    required: true
+    description: "Flag for FC Data"
+
+  - name: AC_Impedance
+    type: float # Sometimes parsed as int, but physically float
+    required: true
+    unit: Ohm
+    description: "AC Impedance"
+
+  - name: ACI_Phase_Angle
+    type: float # Sometimes parsed as int, but physically float
+    required: true
+    unit: Deg
+    description: "ACI Phase Angle"
+
+quality_thresholds:
+  min_rows: 100
+  max_missing_pct: 0.01 # Max 1% missing allowed
