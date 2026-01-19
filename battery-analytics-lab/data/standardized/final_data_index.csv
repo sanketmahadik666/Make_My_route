@@ -1,0 +1,26 @@
+file_name,scenario,status,quality_score,num_records,issues,test_date
+CS2_35_8_17_10_Channel_1-008_standardized.parquet,Continuous_Cycling,PASS,100,1091,,2010-08-16 13:44:57
+CS2_35_8_18_10_Channel_1-008_standardized.parquet,Continuous_Cycling,PASS,100,383,,2010-08-17 14:30:57
+CS2_35_8_19_10_Channel_1-008_standardized.parquet,Continuous_Cycling,PASS,100,383,,2010-08-18 10:59:23
+CS2_35_8_30_10_Channel_1-008_standardized.parquet,Continuous_Cycling,PASS,100,18413,,2010-08-19 14:21:41
+CS2_35_9_7_10_Channel_1-008_standardized.parquet,Continuous_Cycling,PASS,100,15635,,2010-08-31 13:30:15
+CS2_35_9_8_10_Channel_1-008_standardized.parquet,Continuous_Cycling,PASS,100,2350,,2010-09-07 10:44:17
+CS2_35_9_21_10_Channel_1-008_standardized.parquet,Continuous_Cycling,PASS,100,17314,,2010-09-14 13:57:43
+CS2_35_9_30_10_Channel_1-008_standardized.parquet,Continuous_Cycling,PASS,100,16961,,2010-09-21 15:48:03
+CS2_35_10_15_10_Channel_1-008_standardized.parquet,Continuous_Cycling,PASS,100,17139,,2010-10-08 14:29:45
+CS2_35_10_22_10_Channel_1-008_standardized.parquet,Continuous_Cycling,PASS,100,16629,,2010-10-15 17:12:56
+CS2_35_10_29_10_Channel_1-008_standardized.parquet,Continuous_Cycling,PASS,100,16334,,2010-10-22 13:23:55
+CS2_35_11_01_10_Channel_1-008_standardized.parquet,Continuous_Cycling,PASS,100,3248,,2010-10-29 09:58:03
+CS2_35_11_08_10_Channel_1-008_standardized.parquet,Continuous_Cycling,PASS,100,16506,,2010-11-01 14:23:58
+CS2_35_11_23_10_Channel_1-008_standardized.parquet,Continuous_Cycling,PASS,100,16433,,2010-11-16 11:45:27
+CS2_35_11_24_10_Channel_1-008_standardized.parquet,Continuous_Cycling,PASS,100,2696,,2010-11-23 12:25:25
+CS2_35_12_06_10_Channel_1-008_standardized.parquet,Continuous_Cycling,PASS,100,15428,,2010-11-29 10:34:08
+CS2_35_12_13_10_Channel_1-008_standardized.parquet,Continuous_Cycling,PASS,100,15186,,2010-12-06 12:33:56
+CS2_35_12_20_10_Channel_1-008_standardized.parquet,Continuous_Cycling,PASS,100,14658,,2010-12-13 12:36:53
+CS2_35_12_23_10_Channel_1-008_standardized.parquet,Continuous_Cycling,PASS,100,7187,,2010-12-20 12:10:10
+CS2_35_1_10_11_Channel_1-008_standardized.parquet,Continuous_Cycling,PASS,100,12695,,2011-01-03 10:38:25
+CS2_35_1_18_11_Channel_1-008_standardized.parquet,Continuous_Cycling,PASS,100,11658,,2011-01-10 11:47:49
+CS2_35_1_24_11_Channel_1-008_standardized.parquet,Continuous_Cycling,PASS,100,10227,,2011-01-18 13:17:53
+CS2_35_1_28_11_Channel_1-008_standardized.parquet,Continuous_Cycling,PASS,100,6394,,2011-01-24 10:54:44
+CS2_35_2_10_11_Channel_1-008_standardized.parquet,Continuous_Cycling,PASS,100,5983,,2011-01-31 10:51:35
+CS2_35_2_4_11_Channel_1-008_standardized.parquet,Continuous_Cycling,PASS,100,5983,,2011-01-31 10:51:35

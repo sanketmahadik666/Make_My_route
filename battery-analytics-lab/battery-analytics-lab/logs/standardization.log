@@ -3,3 +3,104 @@
 2026-01-19 00:45:28,088 - data_standardizer - INFO - Loaded external metadata from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_1_10_11_extraction_metadata.json
 2026-01-19 00:45:28,339 - data_standardizer - INFO - Successfully standardized 12695 records from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_1_10_11_Channel_1-008.csv
 2026-01-19 00:45:28,448 - data_standardizer - INFO - Generated metadata index at data/standardized/metadata_index.csv with 1 entries
+2026-01-19 01:01:28,028 - data_standardizer - INFO - Starting standardization of file: /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_12_20_10_Channel_1-008.csv
+2026-01-19 01:01:28,058 - data_standardizer - INFO - Read 14658 rows from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_12_20_10_Channel_1-008.csv
+2026-01-19 01:01:28,058 - data_standardizer - INFO - Loaded external metadata from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_12_20_10_extraction_metadata.json
+2026-01-19 01:01:28,350 - data_standardizer - INFO - Successfully standardized 14658 records from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_12_20_10_Channel_1-008.csv
+2026-01-19 01:01:28,351 - data_standardizer - INFO - Starting standardization of file: /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_1_18_11_Channel_1-008.csv
+2026-01-19 01:01:28,372 - data_standardizer - INFO - Read 11658 rows from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_1_18_11_Channel_1-008.csv
+2026-01-19 01:01:28,372 - data_standardizer - INFO - Loaded external metadata from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_1_18_11_extraction_metadata.json
+2026-01-19 01:01:28,549 - data_standardizer - INFO - Successfully standardized 11658 records from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_1_18_11_Channel_1-008.csv
+2026-01-19 01:01:28,550 - data_standardizer - INFO - Starting standardization of file: /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_9_8_10_Channel_1-008.csv
+2026-01-19 01:01:28,554 - data_standardizer - INFO - Read 2350 rows from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_9_8_10_Channel_1-008.csv
+2026-01-19 01:01:28,555 - data_standardizer - INFO - Loaded external metadata from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_9_8_10_extraction_metadata.json
+2026-01-19 01:01:28,586 - data_standardizer - INFO - Successfully standardized 2350 records from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_9_8_10_Channel_1-008.csv
+2026-01-19 01:01:28,586 - data_standardizer - INFO - Starting standardization of file: /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_9_7_10_Channel_1-008.csv
+2026-01-19 01:01:28,612 - data_standardizer - INFO - Read 15635 rows from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_9_7_10_Channel_1-008.csv
+2026-01-19 01:01:28,612 - data_standardizer - INFO - Loaded external metadata from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_9_7_10_extraction_metadata.json
+2026-01-19 01:01:28,783 - data_standardizer - INFO - Successfully standardized 15635 records from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_9_7_10_Channel_1-008.csv
+2026-01-19 01:01:28,784 - data_standardizer - INFO - Starting standardization of file: /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_2_4_11_Channel_1-008.csv
+2026-01-19 01:01:28,804 - data_standardizer - INFO - Read 5983 rows from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_2_4_11_Channel_1-008.csv
+2026-01-19 01:01:28,804 - data_standardizer - INFO - Loaded external metadata from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_2_4_11_extraction_metadata.json
+2026-01-19 01:01:28,898 - data_standardizer - INFO - Successfully standardized 5983 records from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_2_4_11_Channel_1-008.csv
+2026-01-19 01:01:28,899 - data_standardizer - INFO - Starting standardization of file: /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_8_30_10_Channel_1-008.csv
+2026-01-19 01:01:28,929 - data_standardizer - INFO - Read 18413 rows from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_8_30_10_Channel_1-008.csv
+2026-01-19 01:01:28,929 - data_standardizer - INFO - Loaded external metadata from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_8_30_10_extraction_metadata.json
+2026-01-19 01:01:29,131 - data_standardizer - INFO - Successfully standardized 18413 records from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_8_30_10_Channel_1-008.csv
+2026-01-19 01:01:29,131 - data_standardizer - INFO - Starting standardization of file: /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_12_23_10_Channel_1-008.csv
+2026-01-19 01:01:29,153 - data_standardizer - INFO - Read 7187 rows from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_12_23_10_Channel_1-008.csv
+2026-01-19 01:01:29,154 - data_standardizer - INFO - Loaded external metadata from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_12_23_10_extraction_metadata.json
+2026-01-19 01:01:29,264 - data_standardizer - INFO - Successfully standardized 7187 records from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_12_23_10_Channel_1-008.csv
+2026-01-19 01:01:29,265 - data_standardizer - INFO - Starting standardization of file: /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_10_22_10_Channel_1-008.csv
+2026-01-19 01:01:29,292 - data_standardizer - INFO - Read 16629 rows from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_10_22_10_Channel_1-008.csv
+2026-01-19 01:01:29,292 - data_standardizer - INFO - Loaded external metadata from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_10_22_10_extraction_metadata.json
+2026-01-19 01:01:29,473 - data_standardizer - INFO - Successfully standardized 16629 records from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_10_22_10_Channel_1-008.csv
+2026-01-19 01:01:29,474 - data_standardizer - INFO - Starting standardization of file: /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_8_19_10_Channel_1-008.csv
+2026-01-19 01:01:29,484 - data_standardizer - INFO - Read 383 rows from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_8_19_10_Channel_1-008.csv
+2026-01-19 01:01:29,484 - data_standardizer - INFO - Loaded external metadata from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_8_19_10_extraction_metadata.json
+2026-01-19 01:01:29,500 - data_standardizer - INFO - Successfully standardized 383 records from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_8_19_10_Channel_1-008.csv
+2026-01-19 01:01:29,500 - data_standardizer - INFO - Starting standardization of file: /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_1_10_11_Channel_1-008.csv
+2026-01-19 01:01:29,519 - data_standardizer - INFO - Read 12695 rows from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_1_10_11_Channel_1-008.csv
+2026-01-19 01:01:29,519 - data_standardizer - INFO - Loaded external metadata from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_1_10_11_extraction_metadata.json
+2026-01-19 01:01:29,716 - data_standardizer - INFO - Successfully standardized 12695 records from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_1_10_11_Channel_1-008.csv
+2026-01-19 01:01:29,717 - data_standardizer - INFO - Starting standardization of file: /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_9_21_10_Channel_1-008.csv
+2026-01-19 01:01:29,742 - data_standardizer - INFO - Read 17314 rows from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_9_21_10_Channel_1-008.csv
+2026-01-19 01:01:29,742 - data_standardizer - INFO - Loaded external metadata from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_9_21_10_extraction_metadata.json
+2026-01-19 01:01:29,933 - data_standardizer - INFO - Successfully standardized 17314 records from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_9_21_10_Channel_1-008.csv
+2026-01-19 01:01:29,934 - data_standardizer - INFO - Starting standardization of file: /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_12_13_10_Channel_1-008.csv
+2026-01-19 01:01:29,969 - data_standardizer - INFO - Read 15186 rows from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_12_13_10_Channel_1-008.csv
+2026-01-19 01:01:29,969 - data_standardizer - INFO - Loaded external metadata from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_12_13_10_extraction_metadata.json
+2026-01-19 01:01:30,198 - data_standardizer - INFO - Successfully standardized 15186 records from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_12_13_10_Channel_1-008.csv
+2026-01-19 01:01:30,199 - data_standardizer - INFO - Starting standardization of file: /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_10_15_10_Channel_1-008.csv
+2026-01-19 01:01:30,224 - data_standardizer - INFO - Read 17139 rows from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_10_15_10_Channel_1-008.csv
+2026-01-19 01:01:30,224 - data_standardizer - INFO - Loaded external metadata from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_10_15_10_extraction_metadata.json
+2026-01-19 01:01:30,412 - data_standardizer - INFO - Successfully standardized 17139 records from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_10_15_10_Channel_1-008.csv
+2026-01-19 01:01:30,412 - data_standardizer - INFO - Starting standardization of file: /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_10_29_10_Channel_1-008.csv
+2026-01-19 01:01:30,442 - data_standardizer - INFO - Read 16334 rows from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_10_29_10_Channel_1-008.csv
+2026-01-19 01:01:30,442 - data_standardizer - INFO - Loaded external metadata from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_10_29_10_extraction_metadata.json
+2026-01-19 01:01:30,697 - data_standardizer - INFO - Successfully standardized 16334 records from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_10_29_10_Channel_1-008.csv
+2026-01-19 01:01:30,697 - data_standardizer - INFO - Starting standardization of file: /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_8_17_10_Channel_1-008.csv
+2026-01-19 01:01:30,709 - data_standardizer - INFO - Read 1091 rows from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_8_17_10_Channel_1-008.csv
+2026-01-19 01:01:30,709 - data_standardizer - INFO - Loaded external metadata from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_8_17_10_extraction_metadata.json
+2026-01-19 01:01:30,727 - data_standardizer - INFO - Successfully standardized 1091 records from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_8_17_10_Channel_1-008.csv
+2026-01-19 01:01:30,728 - data_standardizer - INFO - Starting standardization of file: /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_12_06_10_Channel_1-008.csv
+2026-01-19 01:01:30,750 - data_standardizer - INFO - Read 15428 rows from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_12_06_10_Channel_1-008.csv
+2026-01-19 01:01:30,751 - data_standardizer - INFO - Loaded external metadata from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_12_06_10_extraction_metadata.json
+2026-01-19 01:01:30,993 - data_standardizer - INFO - Successfully standardized 15428 records from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_12_06_10_Channel_1-008.csv
+2026-01-19 01:01:30,994 - data_standardizer - INFO - Starting standardization of file: /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_11_23_10_Channel_1-008.csv
+2026-01-19 01:01:31,031 - data_standardizer - INFO - Read 16433 rows from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_11_23_10_Channel_1-008.csv
+2026-01-19 01:01:31,031 - data_standardizer - INFO - Loaded external metadata from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_11_23_10_extraction_metadata.json
+2026-01-19 01:01:31,288 - data_standardizer - INFO - Successfully standardized 16433 records from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_11_23_10_Channel_1-008.csv
+2026-01-19 01:01:31,288 - data_standardizer - INFO - Starting standardization of file: /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_11_24_10_Channel_1-008.csv
+2026-01-19 01:01:31,306 - data_standardizer - INFO - Read 2696 rows from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_11_24_10_Channel_1-008.csv
+2026-01-19 01:01:31,306 - data_standardizer - INFO - Loaded external metadata from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_11_24_10_extraction_metadata.json
+2026-01-19 01:01:31,353 - data_standardizer - INFO - Successfully standardized 2696 records from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_11_24_10_Channel_1-008.csv
+2026-01-19 01:01:31,354 - data_standardizer - INFO - Starting standardization of file: /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_11_01_10_Channel_1-008.csv
+2026-01-19 01:01:31,359 - data_standardizer - INFO - Read 3248 rows from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_11_01_10_Channel_1-008.csv
+2026-01-19 01:01:31,359 - data_standardizer - INFO - Loaded external metadata from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_11_01_10_extraction_metadata.json
+2026-01-19 01:01:31,411 - data_standardizer - INFO - Successfully standardized 3248 records from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_11_01_10_Channel_1-008.csv
+2026-01-19 01:01:31,411 - data_standardizer - INFO - Starting standardization of file: /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_2_10_11_Channel_1-008.csv
+2026-01-19 01:01:31,420 - data_standardizer - INFO - Read 5983 rows from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_2_10_11_Channel_1-008.csv
+2026-01-19 01:01:31,420 - data_standardizer - INFO - Loaded external metadata from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_2_10_11_extraction_metadata.json
+2026-01-19 01:01:31,512 - data_standardizer - INFO - Successfully standardized 5983 records from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_2_10_11_Channel_1-008.csv
+2026-01-19 01:01:31,513 - data_standardizer - INFO - Starting standardization of file: /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_9_30_10_Channel_1-008.csv
+2026-01-19 01:01:31,535 - data_standardizer - INFO - Read 16961 rows from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_9_30_10_Channel_1-008.csv
+2026-01-19 01:01:31,536 - data_standardizer - INFO - Loaded external metadata from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_9_30_10_extraction_metadata.json
+2026-01-19 01:01:31,716 - data_standardizer - INFO - Successfully standardized 16961 records from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_9_30_10_Channel_1-008.csv
+2026-01-19 01:01:31,716 - data_standardizer - INFO - Starting standardization of file: /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_1_24_11_Channel_1-008.csv
+2026-01-19 01:01:31,732 - data_standardizer - INFO - Read 10227 rows from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_1_24_11_Channel_1-008.csv
+2026-01-19 01:01:31,732 - data_standardizer - INFO - Loaded external metadata from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_1_24_11_extraction_metadata.json
+2026-01-19 01:01:31,889 - data_standardizer - INFO - Successfully standardized 10227 records from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_1_24_11_Channel_1-008.csv
+2026-01-19 01:01:31,890 - data_standardizer - INFO - Starting standardization of file: /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_11_08_10_Channel_1-008.csv
+2026-01-19 01:01:31,915 - data_standardizer - INFO - Read 16506 rows from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_11_08_10_Channel_1-008.csv
+2026-01-19 01:01:31,915 - data_standardizer - INFO - Loaded external metadata from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_11_08_10_extraction_metadata.json
+2026-01-19 01:01:32,169 - data_standardizer - INFO - Successfully standardized 16506 records from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_11_08_10_Channel_1-008.csv
+2026-01-19 01:01:32,170 - data_standardizer - INFO - Starting standardization of file: /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_1_28_11_Channel_1-008.csv
+2026-01-19 01:01:32,191 - data_standardizer - INFO - Read 6394 rows from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_1_28_11_Channel_1-008.csv
+2026-01-19 01:01:32,191 - data_standardizer - INFO - Loaded external metadata from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_1_28_11_extraction_metadata.json
+2026-01-19 01:01:32,289 - data_standardizer - INFO - Successfully standardized 6394 records from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_1_28_11_Channel_1-008.csv
+2026-01-19 01:01:32,289 - data_standardizer - INFO - Starting standardization of file: /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_8_18_10_Channel_1-008.csv
+2026-01-19 01:01:32,291 - data_standardizer - INFO - Read 383 rows from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_8_18_10_Channel_1-008.csv
+2026-01-19 01:01:32,291 - data_standardizer - INFO - Loaded external metadata from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/metadata/CS2_35_8_18_10_extraction_metadata.json
+2026-01-19 01:01:32,302 - data_standardizer - INFO - Successfully standardized 383 records from /home/sanket/Make_My_route/battery-analytics-lab/data/raw/calce/CS2_35_8_18_10_Channel_1-008.csv
+2026-01-19 01:01:33,342 - data_standardizer - INFO - Generated metadata index at data/standardized/metadata_index.csv with 25 entries
