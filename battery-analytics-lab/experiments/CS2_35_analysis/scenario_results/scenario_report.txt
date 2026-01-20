@@ -1,0 +1,20 @@
+CS2_35 Scenario and Correlation Report
+========================================
+
+Identified Scenario:
+Chemistry: LiCoO2 (Assumed based on CS2 series)
+Nominal Capacity (Ah): 1.1
+Max Voltage (V): 4.2001
+Min Voltage (V): 2.6993
+Max Current (A): 1.0128
+Min Current (A): -1.1003
+Inferred Charge C-rate: 0.92
+Inferred Discharge C-rate: 1.0
+Correlation(I, V): 0.6484
+
+Correlations:
+                         Cycle_Index  Cycle_Discharge_Cap  Avg_Internal_Resistance  Cycle_Duration
+Cycle_Index                 1.000000             0.256682                 0.232708        0.181027
+Cycle_Discharge_Cap         0.256682             1.000000                -0.040115        0.969647
+Avg_Internal_Resistance     0.232708            -0.040115                 1.000000       -0.045284
+Cycle_Duration              0.181027             0.969647                -0.045284        1.000000
