@@ -199,35 +199,51 @@ class VoltageResampler:
             'warnings': []
         }
 
-        required_cols = ['voltage_v', 'capacity_ah', 'current_a']
+        # Define flexible column name mappings (standardized -> possible original names)
+        column_mappings = {
+            'voltage_v': ['voltage_v', 'Voltage'],
+            'capacity_ah': ['capacity_ah', 'Charge_Capacity', 'Discharge_Capacity'],
+            'current_a': ['current_a', 'Current']
+        }
+
         quality_config = self.config['quality_assurance']
 
-        # Check required columns
-        missing_cols = [col for col in required_cols if col not in df.columns]
-        if missing_cols:
-            validation_result['valid'] = False
-            validation_result['errors'].append(f"Missing required columns: {missing_cols}")
-            return validation_result
+        # Check required columns with flexible naming
+        found_columns = {}
+        for std_col, possible_names in column_mappings.items():
+            found = None
+            for name in possible_names:
+                if name in df.columns:
+                    found = name
+                    break
+            if found:
+                found_columns[std_col] = found
+            else:
+                validation_result['valid'] = False
+                validation_result['errors'].append(f"Missing required column: {std_col} (tried: {possible_names})")
+                return validation_result
 
-        # Check data completeness
-        for col in required_cols:
-            non_null_ratio = df[col].notna().sum() / len(df)
+        # Check data completeness for found columns
+        for std_col, actual_col in found_columns.items():
+            non_null_ratio = df[actual_col].notna().sum() / len(df)
             min_coverage = quality_config['completeness_check']['min_coverage']
             if non_null_ratio < min_coverage:
                 validation_result['valid'] = False
                 validation_result['errors'].append(
-                    f"Insufficient data coverage for {col}: {non_null_ratio:.2%} < {min_coverage:.2%}"
+                    f"Insufficient data coverage for {actual_col}: {non_null_ratio:.2%} < {min_coverage:.2%}"
                 )
 
         # Check minimum interpolation points
-        if len(df.dropna(subset=required_cols)) < quality_config['min_interpolation_points']:
+        required_cols_list = list(found_columns.values())
+        if len(df.dropna(subset=required_cols_list)) < quality_config['min_interpolation_points']:
             validation_result['valid'] = False
             validation_result['errors'].append(
                 f"Insufficient data points for interpolation: {len(df)} < {quality_config['min_interpolation_points']}"
             )
 
-        # Check voltage range
-        voltage_range = df['voltage_v'].dropna()
+        # Check voltage range using actual column name
+        voltage_col = found_columns.get('voltage_v', 'Voltage')
+        voltage_range = df[voltage_col].dropna()
         if voltage_range.empty:
             validation_result['valid'] = False
             validation_result['errors'].append("No valid voltage data found")
@@ -248,7 +264,12 @@ class VoltageResampler:
 
     def _is_voltage_monotonic(self, df: pd.DataFrame, direction: str = 'increasing') -> bool:
         """Check if voltage is generally monotonic in the specified direction."""
-        voltage = df['voltage_v'].dropna()
+        # Find the actual voltage column name
+        voltage_col = 'Voltage' if 'Voltage' in df.columns else ('voltage_v' if 'voltage_v' in df.columns else None)
+        if voltage_col is None:
+            return True  # Can't check without voltage data
+
+        voltage = df[voltage_col].dropna()
         if len(voltage) < 3:
             return True  # Not enough points to determine
 
@@ -261,20 +282,36 @@ class VoltageResampler:
 
     def _prepare_data_for_interpolation(self, df: pd.DataFrame) -> Dict[str, np.ndarray]:
         """Prepare data by cleaning and sorting for interpolation."""
+        # Define flexible column name mappings
+        column_mappings = {
+            'voltage_v': ['voltage_v', 'Voltage'],
+            'capacity_ah': ['capacity_ah', 'Charge_Capacity', 'Discharge_Capacity'],
+            'current_a': ['current_a', 'Current']
+        }
+
+        # Find actual column names
+        actual_columns = {}
+        for std_col, possible_names in column_mappings.items():
+            for name in possible_names:
+                if name in df.columns:
+                    actual_columns[std_col] = name
+                    break
+
         # Remove rows with missing voltage values
-        clean_df = df.dropna(subset=['voltage_v']).copy()
+        voltage_col = actual_columns.get('voltage_v', 'voltage_v')
+        clean_df = df.dropna(subset=[voltage_col]).copy()
 
         # Sort by voltage to ensure monotonic ordering
-        clean_df = clean_df.sort_values('voltage_v')
+        clean_df = clean_df.sort_values(voltage_col)
 
         # Remove duplicate voltage values (keep first occurrence)
-        clean_df = clean_df.drop_duplicates(subset='voltage_v', keep='first')
+        clean_df = clean_df.drop_duplicates(subset=voltage_col, keep='first')
 
-        # Extract arrays for interpolation
+        # Extract arrays for interpolation using actual column names
         processed_data = {
-            'voltage': clean_df['voltage_v'].values,
-            'capacity': clean_df['capacity_ah'].values,
-            'current': clean_df['current_a'].values
+            'voltage': clean_df[voltage_col].values,
+            'capacity': clean_df[actual_columns.get('capacity_ah', 'capacity_ah')].values,
+            'current': clean_df[actual_columns.get('current_a', 'current_a')].values
         }
 
         # Add optional variables if available
