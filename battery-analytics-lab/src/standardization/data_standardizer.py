@@ -26,6 +26,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 
 from src.ingestion.schema_definition import SchemaDefinition
+from src.standardization.data_cleaning import DataCleaner
 
 # Suppress warnings for cleaner output
 warnings.filterwarnings('ignore')
@@ -52,6 +53,7 @@ class DataStandardizer:
             'warnings_issued': 0
         }
         self.schema = SchemaDefinition()
+        self.cleaner = DataCleaner()
     
     def _load_config(self) -> Dict[str, Any]:
         """Load configuration from YAML file."""
@@ -307,19 +309,25 @@ class DataStandardizer:
     def _standardize_data(self, df: pd.DataFrame) -> pd.DataFrame:
         """Standardize column names and data types."""
         standardized_df = df.copy()
-        
+
+        # Remove voltage outliers
+        standardized_df = self._remove_voltage_outliers(standardized_df)
+
+        # Handle missing data gaps
+        standardized_df = self._handle_missing_data_gaps(standardized_df)
+
         # Map column names to standardized format
         column_mapping = self._create_column_mapping(standardized_df.columns)
         standardized_df = standardized_df.rename(columns=column_mapping)
         
         # Standardize data types and units
         standardized_df = self._standardize_data_types(standardized_df)
-        
-        # Add cycle numbering (simplified)
-        standardized_df = self._add_cycle_numbering(standardized_df)
-        
+
         # Add phase type classification
         standardized_df = self._classify_phases(standardized_df)
+
+        # Add cycle numbering based on phases
+        standardized_df = self._add_cycle_numbering(standardized_df)
         
         return standardized_df
     
@@ -353,10 +361,14 @@ class DataStandardizer:
             # Capacity columns
             elif any(keyword in col_lower for keyword in ['capacity', 'cap', 'ah']):
                 mapping[col] = 'capacity_ah'
-            
+
             # Temperature columns
             elif any(keyword in col_lower for keyword in ['temperature', 'temp', 'c']):
                 mapping[col] = 'temperature_c'
+
+            # dV/dt columns
+            elif 'dv/dt' in col_lower or 'dv_dt' in col_lower:
+                mapping[col] = 'dv_dt'
             
             # Default: keep original name
             else:
@@ -367,7 +379,7 @@ class DataStandardizer:
     def _standardize_data_types(self, df: pd.DataFrame) -> pd.DataFrame:
         """Standardize data types and apply unit conversions."""
         # Convert numeric columns
-        numeric_cols = ['timestamp', 'voltage_v', 'current_a', 'capacity_ah', 'temperature_c']
+        numeric_cols = ['timestamp', 'voltage_v', 'current_a', 'capacity_ah', 'temperature_c', 'dv_dt']
         
         for col in numeric_cols:
             if col in df.columns:
@@ -405,37 +417,113 @@ class DataStandardizer:
         return series
     
     def _add_cycle_numbering(self, df: pd.DataFrame) -> pd.DataFrame:
-        """Add cycle numbering based on current direction changes."""
-        if 'current_a' in df.columns:
-            # Detect charge/discharge cycles based on current sign changes
-            df['cycle_number'] = 1  # Simplified: assign all data to cycle 1
-        else:
-            df['cycle_number'] = 1
-        
+        """Add cycle numbering based on phase sequences: Charge -> Rest -> Discharge -> Rest."""
+        if 'phase_type' not in df.columns:
+            df['Cycle_Index'] = 1
+            return df
+
+        current_cycle = 1
+        last_significant_phase = None
+        df['Cycle_Index'] = 1  # Initialize
+
+        for i in range(len(df)):
+            phase = df.loc[i, 'phase_type']
+            if phase in ['charge', 'discharge']:
+                if phase == 'charge' and last_significant_phase == 'discharge':
+                    current_cycle += 1
+                last_significant_phase = phase
+            df.loc[i, 'Cycle_Index'] = current_cycle
+
         return df
     
     def _classify_phases(self, df: pd.DataFrame) -> pd.DataFrame:
-        """Classify data phases (charge/discharge/rest)."""
-        if 'current_a' in df.columns:
-            # Simplified classification
+        """Classify data phases (charge/discharge/rest) using dynamic electrical characteristics."""
+        # Use original column names if not mapped
+        current_col = 'current_a' if 'current_a' in df.columns else 'Current'
+        voltage_col = 'voltage_v' if 'voltage_v' in df.columns else 'Voltage'
+        dv_col = 'dv_dt' if 'dv_dt' in df.columns else 'dV/dt'
+        time_col = 'timestamp' if 'timestamp' in df.columns else 'Test_Time'
+
+        if current_col not in df.columns or voltage_col not in df.columns or time_col not in df.columns:
             df['phase_type'] = 'unknown'
-            
-            # Positive current = charging
-            charge_mask = df['current_a'] > 0.1
-            df.loc[charge_mask, 'phase_type'] = 'charge'
-            
-            # Negative current = discharging
-            discharge_mask = df['current_a'] < -0.1
-            df.loc[discharge_mask, 'phase_type'] = 'discharge'
-            
-            # Near zero current = rest
-            rest_mask = (df['current_a'] >= -0.1) & (df['current_a'] <= 0.1)
-            df.loc[rest_mask, 'phase_type'] = 'rest'
-        else:
-            df['phase_type'] = 'unknown'
-        
+            return df
+
+        # Compute dV/dt if not present
+        if dv_col not in df.columns:
+            # Assume timestamp is in seconds, voltage in V
+            dt = df[time_col].diff()
+            dv = df[voltage_col].diff()
+            df[dv_col] = dv / dt
+            df[dv_col] = df[dv_col].fillna(0)
+
+        # Smooth dV/dt with moving average over ~30 seconds (adjust window based on typical dt)
+        # Assuming data is sampled every 30s, window=10 gives ~5min smoothing
+        df['smoothed_dv_dt'] = df[dv_col].rolling(window=10, center=True, min_periods=1).mean()
+
+        # Initialize phase_type
+        df['phase_type'] = 'unknown'
+
+        # Charge step: I > 0 and smoothed_dv_dt >= 0
+        # With voltage validation (Li-ion typical 2.5-4.2V, but rising for charge)
+        charge_mask = (df[current_col] > 0) & (df['smoothed_dv_dt'] >= 0) & (df[voltage_col] >= 2.5) & (df[voltage_col] <= 4.2)
+        df.loc[charge_mask, 'phase_type'] = 'charge'
+
+        # Discharge step: I < 0 and smoothed_dv_dt <= 0
+        discharge_mask = (df[current_col] < 0) & (df['smoothed_dv_dt'] <= 0) & (df[voltage_col] >= 2.5) & (df[voltage_col] <= 4.2)
+        df.loc[discharge_mask, 'phase_type'] = 'discharge'
+
+        # Rest step: neither charge nor discharge, with tolerances
+        rest_mask = (df['phase_type'] == 'unknown') & (abs(df[current_col]) < 0.05) & (abs(df['smoothed_dv_dt']) < 0.001)
+        df.loc[rest_mask, 'phase_type'] = 'rest'
+
+        # Apply hysteresis: require condition to hold for at least 5 consecutive points
+        df['phase_type'] = self._apply_hysteresis(df['phase_type'], window=5)
+
         return df
-    
+
+    def _remove_voltage_outliers(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Remove voltage outliers using threshold filtering: 2.0V < V < 4.5V."""
+        return self.cleaner.remove_voltage_outliers(df)
+
+    def _handle_missing_data_gaps(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Handle missing data gaps: interpolate small gaps, flag large gaps."""
+        return self.cleaner.handle_missing_data_gaps(df, gap_threshold=10.0)
+
+    def _apply_hysteresis(self, phase_series: pd.Series, window: int = 5) -> pd.Series:
+        """Apply hysteresis to phase classifications to prevent oscillation."""
+        phases = phase_series.copy()
+        n = len(phases)
+        hysteresis_phases = ['unknown'] * n
+        pending_phase = 'unknown'
+        count = 0
+
+        for i in range(n):
+            current = phases.iloc[i]
+            if current == pending_phase:
+                count += 1
+                if count >= window:
+                    # Commit the phase
+                    hysteresis_phases[i - count + 1:i + 1] = [pending_phase] * count
+                    pending_phase = 'unknown'
+                    count = 0
+            else:
+                if pending_phase != 'unknown':
+                    # Reset if not persisting
+                    pending_phase = 'unknown'
+                    count = 0
+                if current != 'unknown':
+                    pending_phase = current
+                    count = 1
+                else:
+                    hysteresis_phases[i] = 'unknown'
+
+        # Handle any remaining pending at end
+        if count >= window:
+            start = n - count
+            hysteresis_phases[start:] = [pending_phase] * count
+
+        return pd.Series(hysteresis_phases, index=phase_series.index)
+
     def _attach_metadata(self, df: pd.DataFrame, metadata: Dict[str, Any]) -> pd.DataFrame:
         """Attach metadata columns to the DataFrame."""
         for key, value in metadata.items():

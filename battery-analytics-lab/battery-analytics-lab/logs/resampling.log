@@ -1,0 +1,10 @@
+2026-01-22 15:36:17,468 - voltage_resampler - INFO - VoltageResampler initialized with 121 grid points (3.0V to 4.2V in 10mV steps)
+2026-01-22 15:37:51,505 - voltage_resampler - INFO - VoltageResampler initialized with 121 grid points (3.0V to 4.2V in 10mV steps)
+2026-01-22 15:37:51,528 - resampling_validator - INFO - ResamplingValidator initialized
+2026-01-22 15:37:51,530 - resampling_validator - ERROR - Error during validation: 'bool' object is not iterable
+2026-01-22 15:38:24,088 - voltage_resampler - INFO - VoltageResampler initialized with 121 grid points (3.0V to 4.2V in 10mV steps)
+2026-01-22 15:38:24,096 - resampling_validator - INFO - ResamplingValidator initialized
+2026-01-22 15:38:24,097 - resampling_validator - ERROR - Error during validation: 'bool' object is not iterable
+2026-01-22 15:49:27,230 - voltage_resampler - INFO - VoltageResampler initialized with 121 grid points (3.0V to 4.2V in 10mV steps)
+2026-01-22 15:49:27,232 - voltage_resampler - ERROR - Error resampling cycle data: 'voltage_v'
+2026-01-22 15:50:33,693 - voltage_resampler - INFO - VoltageResampler initialized with 121 grid points (3.0V to 4.2V in 10mV steps)
