@@ -119,3 +119,44 @@
 2026-01-22 14:56:29,624 - data_standardizer - INFO - Loaded external metadata from data/raw/calce/metadata/CS2_35_1_10_11_extraction_metadata.json
 2026-01-22 14:56:30,439 - data_standardizer - INFO - Successfully standardized 12695 records from data/raw/calce/CS2_35_1_10_11_Channel_1-008.csv
 2026-01-22 14:56:31,358 - data_standardizer - INFO - Generated metadata index at data/standardized/metadata_index.csv with 25 entries
+2026-01-22 15:03:21,012 - data_standardizer - INFO - Starting standardization of file: data/raw/calce/CS2_35_1_10_11_Channel_1-008.csv
+2026-01-22 15:03:21,032 - data_standardizer - INFO - Read 12695 rows from data/raw/calce/CS2_35_1_10_11_Channel_1-008.csv
+2026-01-22 15:03:21,033 - data_standardizer - INFO - Loaded external metadata from data/raw/calce/metadata/CS2_35_1_10_11_extraction_metadata.json
+2026-01-22 15:03:21,812 - data_standardizer - INFO - Successfully standardized 12695 records from data/raw/calce/CS2_35_1_10_11_Channel_1-008.csv
+2026-01-22 15:03:22,715 - data_standardizer - INFO - Generated metadata index at data/standardized/metadata_index.csv with 25 entries
+2026-01-22 15:03:52,556 - data_standardizer - INFO - Starting standardization of file: data/raw/calce/CS2_35_1_10_11_Channel_1-008.csv
+2026-01-22 15:03:52,579 - data_standardizer - INFO - Read 12695 rows from data/raw/calce/CS2_35_1_10_11_Channel_1-008.csv
+2026-01-22 15:03:52,579 - data_standardizer - INFO - Loaded external metadata from data/raw/calce/metadata/CS2_35_1_10_11_extraction_metadata.json
+2026-01-22 15:03:52,583 - data_standardizer - WARNING - Found 12070 large time gaps (>10s)
+2026-01-22 15:03:53,408 - data_standardizer - INFO - Successfully standardized 12695 records from data/raw/calce/CS2_35_1_10_11_Channel_1-008.csv
+2026-01-22 15:03:54,298 - data_standardizer - INFO - Generated metadata index at data/standardized/metadata_index.csv with 25 entries
+2026-01-22 15:04:11,309 - data_standardizer - INFO - Starting standardization of file: data/raw/calce/CS2_35_1_10_11_Channel_1-008.csv
+2026-01-22 15:04:11,329 - data_standardizer - INFO - Read 12695 rows from data/raw/calce/CS2_35_1_10_11_Channel_1-008.csv
+2026-01-22 15:04:11,329 - data_standardizer - INFO - Loaded external metadata from data/raw/calce/metadata/CS2_35_1_10_11_extraction_metadata.json
+2026-01-22 15:04:11,333 - data_standardizer - WARNING - Found 449 large time gaps (>10s)
+2026-01-22 15:04:12,152 - data_standardizer - INFO - Successfully standardized 12695 records from data/raw/calce/CS2_35_1_10_11_Channel_1-008.csv
+2026-01-22 15:04:13,099 - data_standardizer - INFO - Generated metadata index at data/standardized/metadata_index.csv with 25 entries
+2026-01-22 15:05:29,568 - data_standardizer - INFO - Starting standardization of file: data/raw/calce/CS2_35_1_10_11_Channel_1-008.csv
+2026-01-22 15:05:29,590 - data_standardizer - INFO - Read 12695 rows from data/raw/calce/CS2_35_1_10_11_Channel_1-008.csv
+2026-01-22 15:05:29,590 - data_standardizer - INFO - Loaded external metadata from data/raw/calce/metadata/CS2_35_1_10_11_extraction_metadata.json
+2026-01-22 15:05:29,594 - data_standardizer - WARNING - Found 449 large time gaps (>60.0s)
+2026-01-22 15:05:30,399 - data_standardizer - INFO - Successfully standardized 12695 records from data/raw/calce/CS2_35_1_10_11_Channel_1-008.csv
+2026-01-22 15:05:31,327 - data_standardizer - INFO - Generated metadata index at data/standardized/metadata_index.csv with 25 entries
+2026-01-22 15:11:11,388 - data_standardizer - INFO - Starting standardization of file: data/raw/calce/CS2_35_1_10_11_Channel_1-008.csv
+2026-01-22 15:11:11,409 - data_standardizer - INFO - Read 12695 rows from data/raw/calce/CS2_35_1_10_11_Channel_1-008.csv
+2026-01-22 15:11:11,409 - data_standardizer - INFO - Loaded external metadata from data/raw/calce/metadata/CS2_35_1_10_11_extraction_metadata.json
+2026-01-22 15:11:11,413 - data_standardizer - WARNING - Found 449 large time gaps (>60.0s)
+2026-01-22 15:11:12,206 - data_standardizer - INFO - Successfully standardized 12695 records from data/raw/calce/CS2_35_1_10_11_Channel_1-008.csv
+2026-01-22 15:11:13,079 - data_standardizer - INFO - Generated metadata index at data/standardized/metadata_index.csv with 25 entries
+2026-01-22 15:11:33,205 - data_standardizer - INFO - Starting standardization of file: data/raw/calce/CS2_35_1_10_11_Channel_1-008.csv
+2026-01-22 15:11:33,226 - data_standardizer - INFO - Read 12695 rows from data/raw/calce/CS2_35_1_10_11_Channel_1-008.csv
+2026-01-22 15:11:33,226 - data_standardizer - INFO - Loaded external metadata from data/raw/calce/metadata/CS2_35_1_10_11_extraction_metadata.json
+2026-01-22 15:11:33,230 - data_standardizer - WARNING - Found 449 large time gaps (>60.0s)
+2026-01-22 15:11:34,027 - data_standardizer - INFO - Successfully standardized 12695 records from data/raw/calce/CS2_35_1_10_11_Channel_1-008.csv
+2026-01-22 15:11:34,944 - data_standardizer - INFO - Generated metadata index at data/standardized/metadata_index.csv with 25 entries
+2026-01-22 15:16:35,284 - data_standardizer - INFO - Starting standardization of file: data/raw/calce/CS2_35_1_10_11_Channel_1-008.csv
+2026-01-22 15:16:35,306 - data_standardizer - INFO - Read 12695 rows from data/raw/calce/CS2_35_1_10_11_Channel_1-008.csv
+2026-01-22 15:16:35,307 - data_standardizer - INFO - Loaded external metadata from data/raw/calce/metadata/CS2_35_1_10_11_extraction_metadata.json
+2026-01-22 15:16:35,311 - data_standardizer - WARNING - Found 449 large time gaps (>60.0s)
+2026-01-22 15:16:36,170 - data_standardizer - INFO - Successfully standardized 12695 records from data/raw/calce/CS2_35_1_10_11_Channel_1-008.csv
+2026-01-22 15:16:37,188 - data_standardizer - INFO - Generated metadata index at data/standardized/metadata_index.csv with 25 entries
