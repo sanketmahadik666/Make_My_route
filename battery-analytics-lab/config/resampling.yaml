@@ -1,0 +1,91 @@
+# Battery Analytics Lab - Resampling Configuration
+# Phase 2: Data Resampling for Uniformity
+
+schema_version: "1.0"
+project: "battery-analytics-lab"
+phase: "2_resampling"
+created_date: "2026-01-22"
+
+# Resampling Strategies
+resampling_strategies:
+  # Preferred: Voltage-based resampling for electrochemical feature alignment
+  voltage_domain:
+    enabled: true
+    description: "Interpolate capacity and current onto fixed voltage grid for feature engineering"
+    voltage_range:
+      min: 3.0    # V
+      max: 4.2    # V
+      step: 0.01  # 10 mV increments
+    interpolation_method: "linear"
+    extrapolate: false  # Don't extrapolate beyond data range
+    variables_to_interpolate:
+      - capacity_ah
+      - current_a
+      - temperature_c  # Optional, for completeness
+
+  # Alternative: Time-based resampling (preserves temporal structure)
+  time_domain:
+    enabled: false  # Not preferred for ML models
+    description: "Interpolate data to fixed frequency"
+    frequency: 1.0  # Hz (1 sample per second)
+    interpolation_method: "linear"
+    extrapolate: false
+
+# Processing Parameters
+processing_params:
+  chunk_size: 10000           # Process in chunks for memory efficiency
+  parallel_processing: true   # Enable parallel processing
+  num_workers: 4             # Number of parallel workers
+  memory_limit_mb: 2048      # Memory limit per worker
+  validation_enabled: true   # Validate resampling results
+  backup_original: true      # Keep original data backup
+
+# Quality Assurance
+quality_assurance:
+  min_interpolation_points: 3    # Minimum points needed for interpolation
+  max_gap_threshold: 0.1        # Maximum voltage gap before flagging (V)
+  outlier_detection:
+    enabled: true
+    method: "iqr"              # Interquartile range method
+    threshold: 1.5             # Outlier threshold multiplier
+  completeness_check:
+    required_variables: ["voltage_v", "capacity_ah", "current_a"]
+    min_coverage: 0.8          # Minimum data coverage required
+
+# Output Specifications
+output_spec:
+  format: "parquet"
+  compression: "snappy"
+  directory: "data/resampled/"
+  subdirectories:
+    voltage_domain: "voltage_domain/"
+    time_domain: "time_domain/"
+  filename_pattern: "{cell_id}_{cycle}_{strategy}_resampled.parquet"
+
+# Validation Criteria
+validation_criteria:
+  voltage_grid_uniformity: 0.001  # Max deviation from uniform grid (V)
+  interpolation_accuracy: 0.01    # Max interpolation error tolerance
+  data_completeness: 0.95         # Minimum data completeness after resampling
+  monotonicity_check: true        # Ensure voltage increases monotonically
+
+# Metadata Tracking
+metadata_tracking:
+  track_interpolation_stats: true
+  track_quality_metrics: true
+  log_resampling_parameters: true
+  record_processing_time: true
+
+# Error Handling
+error_handling:
+  max_retries: 3
+  retry_delay: 1.0  # seconds
+  continue_on_error: true
+  error_log_file: "logs/resampling_errors.log"
+
+# Logging Configuration
+logging:
+  level: "INFO"
+  log_file: "resampling.log"
+  console_output: true
+  log_format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"

@@ -26,6 +26,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 
 from src.ingestion.schema_definition import SchemaDefinition
+from src.standardization.data_cleaning import DataCleaner
 
 # Suppress warnings for cleaner output
 warnings.filterwarnings('ignore')
@@ -52,6 +53,7 @@ class DataStandardizer:
             'warnings_issued': 0
         }
         self.schema = SchemaDefinition()
+        self.cleaner = DataCleaner()
     
     def _load_config(self) -> Dict[str, Any]:
         """Load configuration from YAML file."""
@@ -481,49 +483,11 @@ class DataStandardizer:
 
     def _remove_voltage_outliers(self, df: pd.DataFrame) -> pd.DataFrame:
         """Remove voltage outliers using threshold filtering: 2.0V < V < 4.5V."""
-        # Find the voltage column
-        voltage_candidates = [c for c in df.columns if 'voltage' in c.lower() or 'volt' in c.lower()]
-        voltage_col = voltage_candidates[0] if voltage_candidates else None
-        if voltage_col:
-            initial_count = len(df)
-            # Filter out spikes
-            df = df[(df[voltage_col] > 2.0) & (df[voltage_col] < 4.5)].copy()
-            removed = initial_count - len(df)
-            if removed > 0:
-                self.logger.warning(f"Removed {removed} voltage outlier points")
-        return df
+        return self.cleaner.remove_voltage_outliers(df)
 
     def _handle_missing_data_gaps(self, df: pd.DataFrame) -> pd.DataFrame:
         """Handle missing data gaps: interpolate small gaps, flag large gaps."""
-        df['data_quality_flag'] = 'good'
-        df['test_column'] = 42  # Test
-        # Find the time column
-        time_candidates = [c for c in df.columns if 'time' in c.lower() and ('test' in c.lower() or 'timestamp' in c.lower())]
-        time_col = time_candidates[0] if time_candidates else None
-        if time_col:
-            # Ensure sorted by time
-            df = df.sort_values(time_col).reset_index(drop=True)
-
-            # Calculate time differences
-            dt = df[time_col].diff()
-
-            # Typical dt
-            typical_dt = dt.dropna().median() if not dt.dropna().empty else 30.0
-
-            # Gaps > 60s are large (assuming sampling every 30s, gaps >2x typical)
-            gap_threshold = max(60.0, typical_dt * 2)
-
-            large_gaps = dt > gap_threshold
-            df['data_quality_flag'] = 'good'
-            if large_gaps.any():
-                self.logger.warning(f"Found {large_gaps.sum()} large time gaps (>{gap_threshold:.1f}s)")
-                # For large gaps, flag
-                df.loc[large_gaps, 'data_quality_flag'] = 'corrupted_gap'
-
-            # For small gaps, since rows are missing, interpolation would require resampling
-            # For simplicity, assume data is complete, or implement basic interpolate if needed
-
-        return df
+        return self.cleaner.handle_missing_data_gaps(df, gap_threshold=10.0)
 
     def _apply_hysteresis(self, phase_series: pd.Series, window: int = 5) -> pd.Series:
         """Apply hysteresis to phase classifications to prevent oscillation."""
