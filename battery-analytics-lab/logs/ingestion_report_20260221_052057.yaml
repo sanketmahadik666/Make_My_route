@@ -1,0 +1,40 @@
+config_used: '1.0'
+detailed_results:
+- end_time: '2026-02-21T05:20:57.540256'
+  error_message: '''DataStandardizer'' object has no attribute ''standardize_excel_file'''
+  file_name: CS2_35_10_15_10.xlsx
+  file_path: /home/sanket/Make_My_route/DATA/CS2_35/CS2_35_10_15_10.xlsx
+  processing_duration_seconds: 0.000465
+  standardization_result: null
+  start_time: '2026-02-21T05:20:57.539791'
+  status: error
+  validation_result: null
+- end_time: '2026-02-21T05:20:57.540579'
+  error_message: '''DataStandardizer'' object has no attribute ''standardize_excel_file'''
+  file_name: CS2_35_10_22_10.xlsx
+  file_path: /home/sanket/Make_My_route/DATA/CS2_35/CS2_35_10_22_10.xlsx
+  processing_duration_seconds: 0.000262
+  standardization_result: null
+  start_time: '2026-02-21T05:20:57.540317'
+  status: error
+  validation_result: null
+- end_time: '2026-02-21T05:20:57.540856'
+  error_message: '''DataStandardizer'' object has no attribute ''standardize_excel_file'''
+  file_name: CS2_35_10_29_10.xlsx
+  file_path: /home/sanket/Make_My_route/DATA/CS2_35/CS2_35_10_29_10.xlsx
+  processing_duration_seconds: 0.000226
+  standardization_result: null
+  start_time: '2026-02-21T05:20:57.540630'
+  status: error
+  validation_result: null
+generated_at: '2026-02-21T05:20:57.540909'
+processing_summary:
+  duration_seconds: 0.001577
+  end_time: 2026-02-21 05:20:57.540906
+  files_failed: 3
+  files_processed: 0
+  files_successful: 0
+  processing_errors: 3
+  start_time: 2026-02-21 05:20:57.539329
+  total_files_discovered: 25
+  total_records_processed: 0

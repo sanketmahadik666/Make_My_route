@@ -167,7 +167,7 @@ class DataIngestor:
         try:
             # Step 1: Standardization
             self.logger.info(f"Starting standardization for {file_path.name}")
-            standardization_result = self.standardizer.standardize_excel_file(str(file_path))
+            standardization_result = self.standardizer.standardize_file(str(file_path))
             processing_result['standardization_result'] = standardization_result
             
             if standardization_result['status'] != 'success':
@@ -364,8 +364,8 @@ class DataIngestor:
         for result in processing_results:
             if result.get('standardization_result') and result['standardization_result'].get('status') == 'success':
                 metadata = result['standardization_result']['metadata']
-                validation_passed = result.get('validation_result', {}).get('validation_passed', False)
-                quality_score = result.get('validation_result', {}).get('quality_score', 0.0)
+                validation_passed = (result.get('validation_result') or {}).get('validation_passed', False)
+                quality_score = (result.get('validation_result') or {}).get('quality_score', 0.0)
                 
                 entry = {
                     'cell_id': metadata.get('cell_id', 'unknown'),

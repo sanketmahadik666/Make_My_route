@@ -1,0 +1,6 @@
+2026-02-21 05:21:39,962 - data_cleaner - ERROR - Could not find voltage column for outlier removal
+2026-02-21 05:21:39,962 - data_cleaner - ERROR - Could not find time column for gap handling
+2026-02-21 05:21:39,991 - data_cleaner - ERROR - Could not find voltage column for outlier removal
+2026-02-21 05:21:39,991 - data_cleaner - ERROR - Could not find time column for gap handling
+2026-02-21 05:21:40,003 - data_cleaner - ERROR - Could not find voltage column for outlier removal
+2026-02-21 05:21:40,003 - data_cleaner - ERROR - Could not find time column for gap handling

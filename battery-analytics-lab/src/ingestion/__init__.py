@@ -10,6 +10,6 @@ Date: 2025-12-29
 Version: 1.0
 """
 
-from .data_ingestor import DataIngestor
+# from .data_ingestor import DataIngestor
 
-__all__ = ['DataIngestor']
+# __all__ = ['DataIngestor']

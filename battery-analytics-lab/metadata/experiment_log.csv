@@ -1,1 +1,2 @@
 processing_id,timestamp,operation_type,files_processed,records_ingested,validation_passed,validation_failed,processing_status,notes
+ingestion_20260221_052140,2026-02-21T05:21:40.011024,phase1_ingestion_standardization,3,0,0,3,completed,Processed CS2_35 dataset with 0/3 files passing validation
