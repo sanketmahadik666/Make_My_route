@@ -1,7 +1,0 @@
-{
-  "stations": [
-    {"id": "cs_1", "lat": 52.53, "lon": 13.41, "power_kw": 150, "name": "Station North"},
-    {"id": "cs_2", "lat": 52.51, "lon": 13.40, "power_kw": 50, "name": "Station South"},
-    {"id": "cs_3", "lat": 52.52, "lon": 13.42, "power_kw": 350, "name": "Station East"}
-  ]
-}
