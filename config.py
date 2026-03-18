@@ -20,7 +20,7 @@ STATION_CACHE_TTL = int(os.getenv("STATION_CACHE_TTL_SECONDS", "86400"))
 MEMORY_CACHE_MAX_KEYS = int(os.getenv("MEMORY_CACHE_MAX_KEYS", "512"))
 
 # ── External API Keys
-GOOGLE_ELEVATION_API_KEY = os.getenv("GOOGLE_ELEVATION_API_KEY", "")
+GPXZ_API_KEY = os.getenv("GPXZ_API_KEY", "")
 OCM_API_KEY = os.getenv("OCM_API_KEY", "")
 
 # ── Circuit Breakers
