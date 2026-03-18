@@ -1,0 +1,17 @@
+# Antigravity AI — EV Route Planner Dependencies
+# Core graph & routing
+osmnx>=1.6.0
+networkx>=3.0
+
+# Energy prediction
+nrel.routee.powertrain>=0.5.0
+pandas>=2.0
+
+# API server
+fastapi>=0.100.0
+uvicorn[standard]>=0.22.0
+pydantic>=2.0
+
+# HTTP & data
+requests>=2.31.0
+python-dotenv>=1.0.0
