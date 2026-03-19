@@ -22,6 +22,7 @@ MEMORY_CACHE_MAX_KEYS = int(os.getenv("MEMORY_CACHE_MAX_KEYS", "512"))
 # ── External API Keys
 GPXZ_API_KEY = os.getenv("GPXZ_API_KEY", "")
 OCM_API_KEY = os.getenv("OCM_API_KEY", "")
+API_NINJAS_KEY = os.getenv("API_NINJAS_KEY", "")
 
 # ── Circuit Breakers
 CB_OCM_FAIL_MAX = int(os.getenv("CB_OCM_FAIL_MAX", "3"))
