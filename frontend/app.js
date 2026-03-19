@@ -46,10 +46,9 @@ function initMap() {
     zoomControl: false,
   });
 
-  // Dark tile layer
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
-    attribution: '&copy; OSM &copy; CARTO',
-    subdomains: "abcd",
+  // Standard OpenStreetMap (rich details, green parks)
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     maxZoom: 19,
   }).addTo(map);
 
@@ -246,9 +245,9 @@ function onRouteResponse(response) {
   }
 
   // 2. Feasibility banner
-  if (!response.feasible && !response.charging_needed) {
+  if (!response.feasible) {
     showFeasibilityBanner("infeasible", {
-      deficitKwh: response.deficit_kwh,
+      deficitKwh: response.deficit_kwh || 0,
     });
   } else if (response.charging_needed) {
     showFeasibilityBanner("charging", {
@@ -502,7 +501,7 @@ function renderChargingStopMarkers(stops) {
         `${stop.operator ? `Operator: ${stop.operator}<br>` : ""}` +
         `Arrive: ${(stop.arrival_soc * 100).toFixed(0)}% → Depart: ${(stop.departure_soc * 100).toFixed(0)}%<br>` +
         `Charge: ${stop.charge_time_min} min<br>` +
-        `<small style="color:#888">Data: OpenChargeMap (CC BY 4.0)</small>`
+        `<small style="color:#888">Data: OpenStreetMap (ODbL)</small>`
       );
 
     stationMarkers.push(marker);

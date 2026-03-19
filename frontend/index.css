@@ -861,21 +861,24 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .feasibility-banner[data-state="feasible"] {
-  background: rgba(0, 229, 160, 0.12);
-  border: 1px solid rgba(0, 229, 160, 0.35);
-  box-shadow: var(--shadow-accent);
+  background: var(--bg-elevated);
+  border: 1px solid rgba(0, 229, 160, 0.4);
+  border-left: 4px solid var(--accent-primary);
+  box-shadow: var(--shadow-card), 0 0 15px rgba(0, 229, 160, 0.15);
 }
 
 .feasibility-banner[data-state="charging"] {
-  background: rgba(245, 166, 35, 0.12);
-  border: 1px solid rgba(245, 166, 35, 0.35);
-  box-shadow: var(--shadow-warning);
+  background: var(--bg-elevated);
+  border: 1px solid rgba(245, 166, 35, 0.4);
+  border-left: 4px solid var(--accent-warning);
+  box-shadow: var(--shadow-card), 0 0 15px rgba(245, 166, 35, 0.15);
 }
 
 .feasibility-banner[data-state="infeasible"] {
-  background: rgba(255, 77, 77, 0.12);
-  border: 1px solid rgba(255, 77, 77, 0.35);
-  box-shadow: var(--shadow-danger);
+  background: var(--bg-elevated);
+  border: 1px solid rgba(255, 77, 77, 0.4);
+  border-left: 4px solid var(--accent-danger);
+  box-shadow: var(--shadow-card), 0 0 15px rgba(255, 77, 77, 0.15);
 }
 
 .banner__icon {

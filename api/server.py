@@ -162,9 +162,9 @@ async def get_stations(
         "stations": stations,
         "count": len(stations),
         "attribution": {
-            "provider": "OpenChargeMap",
-            "license": "Creative Commons Attribution 4.0 International (CC BY 4.0)",
-            "url": "https://openchargemap.org",
+            "provider": "OpenStreetMap",
+            "license": "Open Data Commons Open Database License (ODbL)",
+            "url": "https://www.openstreetmap.org/copyright",
         },
     }
 

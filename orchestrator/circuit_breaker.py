@@ -106,7 +106,7 @@ BREAKERS = {
     "ocm_api": CircuitBreaker(CircuitBreakerConfig(
         name="ocm_api", fail_max=CB_OCM_FAIL_MAX, reset_timeout=CB_OCM_RESET_TIMEOUT_S
     )),
-    "google_elevation": CircuitBreaker(CircuitBreakerConfig(
-        name="google_elevation", fail_max=CB_ELEVATION_FAIL_MAX, reset_timeout=CB_ELEVATION_RESET_TIMEOUT_S
+    "gpxz_elevation": CircuitBreaker(CircuitBreakerConfig(
+        name="gpxz_elevation", fail_max=CB_ELEVATION_FAIL_MAX, reset_timeout=CB_ELEVATION_RESET_TIMEOUT_S
     )),
 }
