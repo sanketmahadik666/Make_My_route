@@ -104,21 +104,30 @@ def fetch_charging_stations(
                 break
                 
         if power_str:
+            import re
             match = re.search(r"(\d+(\.\d+)?)", power_str)
             if match:
                 power = float(match.group(1))
 
-        if power < min_power_kw:
+        # Only filter by power if we ACTUALLY have power metadata, 
+        # otherwise assume it's acceptable so we don't drop 90% of OSM stations.
+        if power > 0 and power < min_power_kw:
             continue
 
         fast_charge = power >= 40.0
 
         connector_types = []
         if "socket:type2" in row and pd.notna(row["socket:type2"]): connector_types.append("Type 2")
+        if "socket:type2_combo" in row and pd.notna(row["socket:type2_combo"]): connector_types.append("CCS")
         if "socket:ccs" in row and pd.notna(row["socket:ccs"]): connector_types.append("CCS")
         if "socket:chademo" in row and pd.notna(row["socket:chademo"]): connector_types.append("CHAdeMO")
         
-        operator = row["operator"] if "operator" in row and pd.notna(row["operator"]) else "Unknown Operator"
+        # Fallback if no specific socket tags found
+        if not connector_types:
+            connector_types.append("Standard / CCS")
+            fast_charge = True  # Assume true for route planning if unknown
+
+        operator = row["operator"] if "operator" in row and pd.notna(row["operator"]) else "Public Charger"
         name = row["name"] if "name" in row and pd.notna(row["name"]) else "Charging Station"
         
         capacity = 1

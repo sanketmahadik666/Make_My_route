@@ -11,6 +11,7 @@ let originMarker = null;
 let destMarker = null;
 let routePolyline = null;
 let stationMarkers = [];
+let nearbyStationMarkers = [];
 let clickMode = "origin"; // "origin" | "destination"
 let originCoords = null;
 let destCoords = null;
@@ -57,6 +58,21 @@ function initMap() {
 
   // Click handler
   map.on("click", onMapClick);
+
+  // Load nearby chargers by default 
+  fetchDefaultStations(20.0063, 73.7900);
+}
+
+async function fetchDefaultStations(lat, lon) {
+  try {
+    const res = await fetch(`${API_BASE}/api/stations?lat=${lat}&lon=${lon}&radius_km=15.0`);
+    const data = await res.json();
+    if (data.stations && data.stations.length > 0) {
+      renderNearbyStationMarkers(data.stations);
+    }
+  } catch (e) {
+    console.error("[App] Failed to load default stations:", e);
+  }
 }
 
 function onMapClick(e) {
@@ -505,6 +521,43 @@ function renderChargingStopMarkers(stops) {
       );
 
     stationMarkers.push(marker);
+  });
+}
+
+function renderNearbyStationMarkers(stations) {
+  nearbyStationMarkers.forEach((m) => map.removeLayer(m));
+  nearbyStationMarkers = [];
+
+  stations.forEach((station) => {
+    if (!station.lat || !station.lon) return;
+
+    // Use smaller blue marker to distinguish from actively routed bright yellow chargers
+    const marker = L.marker([station.lat, station.lon], {
+      icon: L.divIcon({
+        className: "",
+        html: `<div style="
+          background: #23A6F5;
+          color: #0D0F11;
+          width: 22px; height: 22px;
+          border-radius: 50%;
+          display: flex; align-items: center; justify-content: center;
+          font-size: 11px; font-weight: bold;
+          border: 2px solid #0D0F11;
+          box-shadow: 0 0 10px rgba(35,166,245,0.5);
+        ">🔌</div>`,
+        iconSize: [22, 22],
+        iconAnchor: [11, 11],
+      }),
+    })
+      .addTo(map)
+      .bindPopup(
+        `<b>${station.name || "Charger"}</b><br>` +
+        `${station.power_kw}kW · ${station.connector_type || "—"} · ${station.current_type || ""}<br>` +
+        `${station.operator ? `Operator: ${station.operator}<br>` : ""}` +
+        `<small style="color:#888">Data: OpenStreetMap (ODbL)</small>`
+      );
+
+    nearbyStationMarkers.push(marker);
   });
 }
 
