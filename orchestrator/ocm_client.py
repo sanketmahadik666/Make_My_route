@@ -398,7 +398,6 @@ async def fetch_all_stations_paginated(
         if last_id is not None:
             params["greaterthanid"] = last_id
 
-        # Use asyncio to not strictly block although this is requests
         loop = asyncio.get_event_loop()
         response = await loop.run_in_executor(None, lambda: requests.get(OCM_BASE_URL, params=params, timeout=10))
         batch    = response.json()
@@ -428,6 +427,87 @@ def _stale_or_empty(cache_key: str) -> list:
     return []
 
 
+def get_grid_cell(lat: float, lon: float) -> tuple[float, float]:
+    """Returns the center of the 0.5-degree grid cell for permanent caching."""
+    return round(lat * 2) / 2.0, round(lon * 2) / 2.0
+
+
+def _haversine(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
+    R = 6371.0
+    dlat = math.radians(lat2 - lat1)
+    dlon = math.radians(lon2 - lon1)
+    a = math.sin(dlat / 2)**2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon / 2)**2
+    return R * 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+
+
+async def _fetch_ocm_grid(grid_lat: float, grid_lon: float, country_code: str = None) -> list[dict]:
+    """Fetches a large 60km radius around the grid center from OCM and stores raw responses."""
+    cache_key = f"ocm_grid_{grid_lat}_{grid_lon}"
+    cached = cache_get(cache_key, ttl=86400)
+    
+    if cached is not None:
+        print(f"[OCM Grid] Cache hit for {cache_key}: {len(cached)} raw stations.")
+        return cached
+
+    print(f"[OCM Grid] Fetching new data for {cache_key}...")
+    params = build_ocm_request_params(
+        lat=grid_lat,
+        lon=grid_lon,
+        radius_km=60.0,
+        country_code=country_code,
+    )
+    params["maxresults"] = 500
+
+    try:
+        raw_data = await BREAKERS["ocm_api"].call(
+            fetch_all_stations_paginated,
+            params, max_pages=5,
+            fallback=lambda: _stale_or_empty(cache_key)
+        )
+    except Exception as e:
+        print(f"[OCM Grid] Fetch failed: {e}")
+        raw_data = cache_get_stale(cache_key) or []
+        
+    cache_set(cache_key, raw_data, ttl=86400, layers=["memory", "disk"])
+    return raw_data
+
+
+async def retrieve_stations_for_location(
+    lat: float,
+    lon: float,
+    radius_km: float,
+    ev_profile: dict = None,
+    country_code: str = None
+) -> list[StationRecord]:
+    if ev_profile is None:
+        ev_profile = {
+            "max_charge_rate_kw": 150.0,
+            "connector_types": []
+        }
+
+    grid_lat, grid_lon = get_grid_cell(lat, lon)
+    raw_data = await _fetch_ocm_grid(grid_lat, grid_lon, country_code)
+    
+    stations = []
+    for raw in raw_data:
+        addr = raw.get("AddressInfo", {}) or {}
+        st_lat = addr.get("Latitude")
+        st_lon = addr.get("Longitude")
+        
+        if st_lat is None or st_lon is None or (st_lat == 0.0 and st_lon == 0.0):
+            continue
+            
+        dist = _haversine(lat, lon, float(st_lat), float(st_lon))
+        if dist <= radius_km:
+            record = normalize_ocm_station(raw, ev_profile, lat, lon)
+            if record is not None:
+                record.distance_km = dist
+                stations.append(record)
+
+    stations = rank_stations(stations, ev_profile)
+    return stations
+
+
 async def retrieve_stations_for_route(
     route_nodes:  list,
     G,
@@ -443,58 +523,13 @@ async def retrieve_stations_for_route(
     mid_lat  = G.nodes[mid_node]['y']
     mid_lon  = G.nodes[mid_node]['x']
 
-    cache_key = f"stations:{round(mid_lat,3)}:{round(mid_lon,3)}:{radius_km}"
-    
-    # Check if memory cache works exactly as cache_get (returns dicts, we need StationRecords).
-    # Since we cache `list[StationRecord]`, it should return `list[StationRecord]`.
-    cached    = cache_get(cache_key, ttl=86_400)
-    if cached is not None:
-        print(f"[OCM] Cache hit: {len(cached)} stations loaded")
-        # In python, JSON serialization of our dataclasses drops type structure unless handled.
-        # But if it's L1 memory cache, it stores the raw Python objects. If L2, it's JSON dicts.
-        # To be safe, if we get list of dicts, we MUST convert back to StationRecord.
-        # For MVP we will assume caching framework seamlessly handles JSONification, but realistically
-        # we'll just parse if needed. We'll reconstruct if dict:
-        if len(cached) > 0 and isinstance(cached[0], dict):
-            # Complex reconstruction needed for disk cache. For now, rely on cache_get 
-            # as defined conceptually in the spec.
-            pass
-        return cached
-
-    params = build_ocm_request_params(
-        lat              = mid_lat,
-        lon              = mid_lon,
-        radius_km        = radius_km,
-        country_code     = country_code,
+    stations = await retrieve_stations_for_location(
+        lat=mid_lat,
+        lon=mid_lon,
+        radius_km=radius_km,
+        ev_profile=ev_profile,
+        country_code=country_code
     )
 
-    try:
-        raw_data = await BREAKERS["ocm_api"].call(
-            fetch_all_stations_paginated,
-            params, max_pages=2,
-            fallback=lambda: _stale_or_empty(cache_key)
-        )
-    except Exception as e:
-        print(f"[OCM] Fetch failed: {e} — using stale cache or empty")
-        raw_data = cache_get_stale(cache_key) or []
-
-    stations = []
-    for raw in raw_data:
-        record = normalize_ocm_station(raw, ev_profile, mid_lat, mid_lon)
-        if record is not None:
-            stations.append(record)
-
-    print(f"[OCM] {len(raw_data)} raw → {len(stations)} valid stations after normalization")
-
     stations = map_stations_to_graph_nodes(stations, G)
-    stations = rank_stations(stations, ev_profile)
-
-    try:
-        # cache_set might fail to JSON encode dataclasses recursively on L2.
-        # This is fine for the conceptual orchestration layer, but wait, L2 disk cache uses json.dump!
-        from dataclasses import asdict
-        cache_set(cache_key, [asdict(s) for s in stations], ttl=86_400, layers=["memory", "disk"])
-    except Exception as e:
-        print(f"[OCM Cache] Error setting cache: {e}")
-
     return stations

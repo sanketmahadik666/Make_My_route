@@ -155,16 +155,34 @@ async def get_stations(
     radius_km: float = Query(10.0, gt=0, le=50),
     min_power_kw: float = Query(0.0, ge=0, description="Minimum charger power in kW"),
 ):
-    """Fetch nearby charging stations from OpenChargeMap."""
-    from core.charger_client import fetch_charging_stations
-    stations = fetch_charging_stations(lat, lon, radius_km, min_power_kw)
+    """Fetch nearby charging stations from OpenChargeMap utilizing the 0.5-degree grid cache."""
+    from orchestrator.ocm_client import retrieve_stations_for_location
+    
+    # Empty EV profile to fetch all connector types initially for map viewing
+    ev_profile = {
+        "max_charge_rate_kw": 150.0,
+        "connector_types": []
+    }
+    
+    stations = await retrieve_stations_for_location(
+        lat=lat, 
+        lon=lon, 
+        radius_km=radius_km, 
+        ev_profile=ev_profile,
+        country_code="IN"
+    )
+    
+    # Filter by user requested minimum power if any
+    if min_power_kw > 0:
+        stations = [s for s in stations if s.best_connection and s.best_connection.effective_power_kw >= min_power_kw]
+
     return {
         "stations": stations,
         "count": len(stations),
         "attribution": {
-            "provider": "OpenStreetMap",
-            "license": "Open Data Commons Open Database License (ODbL)",
-            "url": "https://www.openstreetmap.org/copyright",
+            "provider": "OpenChargeMap",
+            "license": "Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)",
+            "url": "https://openchargemap.org",
         },
     }
 
